@@ -34,7 +34,7 @@ import com.swirlds.common.io.utility.FileUtils;
 import com.swirlds.common.io.utility.TemporaryFileBuilder;
 import com.swirlds.common.system.events.DetailedConsensusEvent;
 import com.swirlds.platform.internal.EventImpl;
-import com.swirlds.platform.recovery.internal.EventStreamSingleFileIterator;
+import com.swirlds.platform.recovery.events.EventStreamSingleFileIterator;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;

@@ -16,8 +16,8 @@
 
 package com.swirlds.platform.test.cli;
 
-import static com.swirlds.platform.recovery.internal.EventStreamSingleFileRepairer.DAMAGED_SUFFIX;
-import static com.swirlds.platform.recovery.internal.EventStreamSingleFileRepairer.REPAIRED_SUFFIX;
+import static com.swirlds.platform.recovery.events.EventStreamSingleFileRepairer.DAMAGED_SUFFIX;
+import static com.swirlds.platform.recovery.events.EventStreamSingleFileRepairer.REPAIRED_SUFFIX;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,8 +29,8 @@ import com.swirlds.common.constructable.ConstructableRegistryException;
 import com.swirlds.common.test.fixtures.RandomUtils;
 import com.swirlds.platform.internal.ConsensusRound;
 import com.swirlds.platform.internal.EventImpl;
-import com.swirlds.platform.recovery.internal.EventStreamSingleFileIterator;
-import com.swirlds.platform.recovery.internal.EventStreamSingleFileRepairer;
+import com.swirlds.platform.recovery.events.EventStreamSingleFileIterator;
+import com.swirlds.platform.recovery.events.EventStreamSingleFileRepairer;
 import com.swirlds.platform.test.consensus.GenerateConsensus;
 import com.swirlds.platform.test.simulated.RandomSigner;
 import com.swirlds.platform.test.stream.StreamUtils;
