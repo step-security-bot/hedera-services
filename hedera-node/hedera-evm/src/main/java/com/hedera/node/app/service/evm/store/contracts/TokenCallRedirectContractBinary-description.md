@@ -1,6 +1,14 @@
 # `TOKEN_CALL_REDIRECT_CONTRACT_BINARY`
 
-From `HederaEvmWorldStateTokenAccount` at `ca5e6ec2` *2023-02-17)
+The "Token Call Redirect" contract helps implement [HIP-218: "Smart Contract interactions with Hedera Token Accounts"](https://hips.hedera.com/hip/hip-218) by providing a proxy for an HTS token kind (defined by an _account_) into the EVM world so that HTS tokens can behave as if they were ERC-20/ERC-721 tokens. (For a useful subset of ERC-20/ERC-721 operations: See HIP-218 for specifics.)
+
+Each HTS account acts as if it is the address of a Token Call Redirect contract.  This contract simply wraps the calldata (provided by the calling contract or transaction) with the HTS token's own address, then delegate-calls the actual HTS precompile, passing back whatever the return status and value is.
+
+The Token Call Redirect contract acts as if it is unique for each HTS token kind.  A "template" bytecode is in the source code with a fixed bitstring (`TOKEN_BYTECODE_PATTERN == 0xfefefe....fe`) where the HTS token kind address is supposed to be: that bitstring is replaced by the actual HTS token kind address just as it is given to the EVM to process it.
+
+## Raw Bytecode
+
+From [`HederaEvmWorldStateTokenAccount` at `ca5e6ec2`](https://github.com/hashgraph/hedera-services/blob/f023153207482730f79fd5da69c6fbd29eaa3fcc/hedera-node/hedera-evm/src/main/java/com/hedera/node/app/service/evm/store/contracts/HederaEvmWorldStateTokenAccount.java#L35) (as viewed on 2023-09-17)
 
 ```
 6080604052348015600f57600080fd5b506000610167905077618dc65efefefe
@@ -10,7 +18,7 @@ fefefefefefefefefefefefefefefefefe600052366000602037600080366018
 b81bb93ff19a238b64736f6c634300080b0033
 ```
 
-Where `fefefe....fefefe` is replaced by an EVM address (token address?)
+Where `fefefe....fefefe` is replaced by an EVM address (HTS token kind's account-num alias (aka: long-zero)).
 
 ## Solidity
 Via `library.dedaub.com/decompile`:
