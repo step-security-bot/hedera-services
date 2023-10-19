@@ -18,6 +18,7 @@ package com.hedera.node.app;
 
 import static com.hedera.hapi.node.base.HederaFunctionality.CRYPTO_TRANSFER;
 import static com.hedera.node.app.service.contract.impl.ContractServiceImpl.CONTRACT_SERVICE;
+import static com.hedera.node.app.util.HederaAsciiArt.HEDERA;
 import static com.swirlds.common.system.InitTrigger.EVENT_STREAM_RECOVERY;
 import static com.swirlds.common.system.InitTrigger.GENESIS;
 import static com.swirlds.common.system.InitTrigger.RESTART;
@@ -55,7 +56,8 @@ import com.hedera.node.app.state.merkle.MerkleHederaState;
 import com.hedera.node.app.state.merkle.MerkleSchemaRegistry;
 import com.hedera.node.app.state.recordcache.RecordCacheService;
 import com.hedera.node.app.throttle.CongestionThrottleService;
-import com.hedera.node.app.throttle.HandleThrottleAccumulator;
+import com.hedera.node.app.throttle.SynchronizedThrottleAccumulator;
+import com.hedera.node.app.throttle.ThrottleAccumulator;
 import com.hedera.node.app.throttle.ThrottleManager;
 import com.hedera.node.app.throttle.impl.NetworkUtilizationManagerImpl;
 import com.hedera.node.app.version.HederaSoftwareVersion;
@@ -98,19 +100,19 @@ import org.apache.logging.log4j.Logger;
 
 /*
  ****************        ****************************************************************************************
- **********                    **********                                                                       *
- *******                          *******                                                                       *
- *****                              *****                                                                       *
+ ************                ************                                                                       *
+ *********                      *********                                                                       *
+ ******                            ******                                                                       *
  ****                                ****      ___           ___           ___           ___           ___      *
- **         HHHH          HHHH         **     /\  \         /\  \         /\  \         /\  \         /\  \     *
- **         HHHH          HHHH         **    /::\  \       /::\  \       /::\  \       /::\  \       /::\  \    *
- *          HHHHHHHHHHHHHHHHHH          *   /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \   *
-            HHHHHHHHHHHHHHHHHH             /::\~\:\  \   /:/  \:\__\   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \  *
-            HHHH          HHHH            /:/\:\ \:\__\ /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ *
-            HHHHHHHHHHHHHHHHHH            \:\~\:\ \/__/ \:\  \ /:/  / \:\~\:\ \/__/ \/_|::\/:/  / \/__\:\/:/  / *
- *          HHHHHHHHHHHHHHHHHH          *  \:\ \:\__\    \:\  /:/  /   \:\ \:\__\      |:|::/  /       \::/  /  *
- **         HHHH          HHHH         **   \:\ \/__/     \:\/:/  /     \:\ \/__/      |:|\/__/        /:/  /   *
- ***        HHHH          HHHH        ***    \:\__\        \::/__/       \:\__\        |:|  |         /:/  /    *
+ ***        ĦĦĦĦ          ĦĦĦĦ        ***     /\  \         /\  \         /\  \         /\  \         /\  \     *
+ **         ĦĦĦĦ          ĦĦĦĦ         **    /::\  \       /::\  \       /::\  \       /::\  \       /::\  \    *
+ *          ĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦ          *   /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \   *
+            ĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦ             /::\~\:\  \   /:/  \:\__\   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \  *
+            ĦĦĦĦ          ĦĦĦĦ            /:/\:\ \:\__\ /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ *
+            ĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦ            \:\~\:\ \/__/ \:\  \ /:/  / \:\~\:\ \/__/ \/_|::\/:/  / \/__\:\/:/  / *
+ *          ĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦĦ          *  \:\ \:\__\    \:\  /:/  /   \:\ \:\__\      |:|::/  /       \::/  /  *
+ **         ĦĦĦĦ          ĦĦĦĦ         **   \:\ \/__/     \:\/:/  /     \:\ \/__/      |:|\/__/        /:/  /   *
+ ***        ĦĦĦĦ          ĦĦĦĦ        ***    \:\__\        \::/__/       \:\__\        |:|  |         /:/  /    *
  ****                                ****     \/__/         ~~            \/__/         \|__|         \/__/     *
  ******                            ******                                                                       *
  *********                      *********                                                                       *
@@ -171,8 +173,20 @@ public final class Hedera implements SwirldMain {
      */
     private PlatformStatus platformStatus = PlatformStatus.STARTING_UP;
 
-    private HandleThrottleAccumulator handleThrottling;
+    private ThrottleAccumulator backendThrottle;
+    private ThrottleAccumulator frontendThrottle;
     private MonoMultiplierSources monoMultiplierSources;
+
+    /**
+     * The application name from the platform's perspective. This is currently locked in at the old main class name and
+     * requires data migration to change.
+     */
+    public static final String APP_NAME = "com.hedera.services.ServicesMain";
+
+    /**
+     * The swirld name. Currently, there is only one swirld.
+     */
+    public static final String SWIRLD_NAME = "123";
 
     /*==================================================================================================================
     *
@@ -190,22 +204,9 @@ public final class Hedera implements SwirldMain {
 
         // Print welcome message
         logger.info(
-                """
-
-                                ---------------
-                            -----------------------
-                          ---------##-----##---------
-                        -----------##-----##-----------            _   _              _                      \s
-                        -----------#########-----------           | | | |   ___    __| |   ___   _ __    __ _\s
-                        -----------##-----##-----------           | |_| |  / _ \\  / _` |  / _ \\ | '__|  / _` |
-                        -----------#########-----------           |  _  | |  __/ | (_| | |  __/ | |    | (_| |
-                        -----------##-----##-----------           |_| |_|  \\___|  \\__,_|  \\___| |_|     \\__,_|
-                          ---------##-----##---------                                                        \s
-                            -----------------------
-                                ---------------
-                        """);
-        logger.info("Welcome to Hedera! Developed with ❤\uFE0F by the Open Source Community. "
-                + "https://github.com/hashgraph/hedera-services");
+                "\n{}\n\nWelcome to Hedera! Developed with ❤\uFE0F by the Open Source Community. "
+                        + "https://github.com/hashgraph/hedera-services\n",
+                HEDERA);
 
         // Load the bootstrap configuration. These config values are NOT stored in state, so we don't need to have
         // state up and running for getting their values. We use this bootstrap config only in this constructor.
@@ -390,9 +391,9 @@ public final class Hedera implements SwirldMain {
     }
 
     /**
-     * Called by this class when we detect it is time to do migration. The {@code deserializedVersion} must not be
-     * newer than the current software version. If it is prior to the current version, then each migration between
-     * the {@code deserializedVersion} and the current version, including the current version, will be executed, thus
+     * Called by this class when we detect it is time to do migration. The {@code deserializedVersion} must not be newer
+     * than the current software version. If it is prior to the current version, then each migration between the
+     * {@code deserializedVersion} and the current version, including the current version, will be executed, thus
      * bringing the state up to date.
      *
      * <p>If the {@code deserializedVersion} is {@code null}, then this is the first time the node has been started,
@@ -417,7 +418,13 @@ public final class Hedera implements SwirldMain {
             final var serviceName = service.getServiceName();
             logger.info("Migrating Service {}", serviceName);
             final var registry = (MerkleSchemaRegistry) registration.registry();
-            registry.migrate(state, previousVersion, currentVersion, configProvider.getConfiguration(), networkInfo);
+            registry.migrate(
+                    state,
+                    previousVersion,
+                    currentVersion,
+                    configProvider.getConfiguration(),
+                    networkInfo,
+                    backendThrottle);
         }
         logger.info("Migration complete");
     }
@@ -449,11 +456,11 @@ public final class Hedera implements SwirldMain {
         if (!isUTF8(defaultCharset)) {
             logger.error(
                     """
-                    Fatal precondition violation in HederaNode#{}: default charset is {} and not UTF-8
-                    LC_ALL={}
-                    LANG={}
-                    file.encoding={}
-                    """,
+                            Fatal precondition violation in HederaNode#{}: default charset is {} and not UTF-8
+                            LC_ALL={}
+                            LANG={}
+                            file.encoding={}
+                            """,
                     daggerApp.nodeId(),
                     defaultCharset,
                     System.getenv("LC_ALL"),
@@ -668,7 +675,9 @@ public final class Hedera implements SwirldMain {
         logger.info("Initializing ThrottleManager");
         this.throttleManager = new ThrottleManager();
 
-        this.handleThrottling = new HandleThrottleAccumulator(configProvider);
+        this.backendThrottle = new ThrottleAccumulator(() -> 1, configProvider);
+        this.frontendThrottle =
+                new ThrottleAccumulator(() -> platform.getAddressBook().getSize(), configProvider);
         this.monoMultiplierSources = createMultiplierSources();
 
         logger.info("Initializing ExchangeRateManager");
@@ -702,7 +711,7 @@ public final class Hedera implements SwirldMain {
                         .getConfiguration()
                         .getConfigData(FeesConfig.class)
                         .percentCongestionMultipliers(),
-                () -> handleThrottling.activeThrottlesFor(CRYPTO_TRANSFER));
+                () -> backendThrottle.activeThrottlesFor(CRYPTO_TRANSFER));
         final var gasFeeMultiplier = new ThrottleMultiplierSource(
                 "EVM gas/sec",
                 "gas/sec",
@@ -716,7 +725,7 @@ public final class Hedera implements SwirldMain {
                         .getConfiguration()
                         .getConfigData(FeesConfig.class)
                         .percentCongestionMultipliers(),
-                () -> List.of(handleThrottling.gasLimitThrottle()));
+                () -> List.of(backendThrottle.gasLimitThrottle()));
 
         return new MonoMultiplierSources(genericFeeMultiplier, gasFeeMultiplier);
     }
@@ -749,7 +758,9 @@ public final class Hedera implements SwirldMain {
         logger.info("Initializing ThrottleManager");
         this.throttleManager = new ThrottleManager();
 
-        this.handleThrottling = new HandleThrottleAccumulator(configProvider);
+        this.backendThrottle = new ThrottleAccumulator(() -> 1, configProvider);
+        this.frontendThrottle =
+                new ThrottleAccumulator(() -> platform.getAddressBook().getSize(), configProvider);
         this.monoMultiplierSources = createMultiplierSources();
 
         logger.info("Initializing ExchangeRateManager");
@@ -804,9 +815,11 @@ public final class Hedera implements SwirldMain {
                             throttleManager,
                             exchangeRateManager,
                             monoMultiplierSources,
-                            handleThrottling))
+                            backendThrottle,
+                            frontendThrottle))
                     .networkUtilizationManager(
-                            new NetworkUtilizationManagerImpl(handleThrottling, monoMultiplierSources))
+                            new NetworkUtilizationManagerImpl(backendThrottle, monoMultiplierSources))
+                    .synchronizedThrottleAccumulator(new SynchronizedThrottleAccumulator(frontendThrottle))
                     .self(SelfNodeInfoImpl.of(nodeAddress, version))
                     .platform(platform)
                     .maxSignedTxnSize(MAX_SIGNED_TXN_SIZE)
@@ -871,8 +884,10 @@ public final class Hedera implements SwirldMain {
             daggerApp.throttleManager().update(fileData);
 
             // Initializing handle throttling
-            this.handleThrottling.rebuildFor(daggerApp.throttleManager().throttleDefinitions());
-            this.handleThrottling.applyGasConfig();
+            this.backendThrottle.rebuildFor(daggerApp.throttleManager().throttleDefinitions());
+            this.backendThrottle.applyGasConfig();
+            this.frontendThrottle.rebuildFor(daggerApp.throttleManager().throttleDefinitions());
+            this.frontendThrottle.applyGasConfig();
 
             // Updating the multiplier source to use the new throttle definitions
             this.monoMultiplierSources.resetExpectations();

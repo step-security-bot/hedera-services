@@ -105,34 +105,45 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
         requireNonNull(context);
         final var txn = context.body();
         pureChecks(txn);
+
+        final var payerId = context.payer();
         final var op = txn.cryptoApproveAllowanceOrThrow();
         var failureStatus = INVALID_ALLOWANCE_OWNER_ID;
-
+        // Only if owner is not same as payer, need to sign with owner
         for (final var allowance : op.cryptoAllowancesOrElse(emptyList())) {
-            if (allowance.hasOwner()) {
+            if (allowance.hasOwner()
+                    && !allowance.ownerOrThrow().equals(AccountID.DEFAULT)
+                    && !allowance.ownerOrThrow().equals(payerId)) {
                 context.requireKeyOrThrow(allowance.ownerOrThrow(), failureStatus);
             }
         }
+        // Only if owner is not same as payer, need to sign with owner
         for (final var allowance : op.tokenAllowancesOrElse(emptyList())) {
-            if (allowance.hasOwner()) {
+            if (allowance.hasOwner()
+                    && !allowance.ownerOrThrow().equals(AccountID.DEFAULT)
+                    && !allowance.ownerOrThrow().equals(payerId)) {
                 context.requireKeyOrThrow(allowance.ownerOrThrow(), failureStatus);
             }
         }
         for (final var allowance : op.nftAllowancesOrElse(emptyList())) {
-            if (allowance.hasOwner()) {
-                final var ownerId = allowance.ownerOrThrow();
-                // If a spender who is granted approveForAll from owner and is granting
-                // allowance for a serial to another spender, need signature from the approveForAll
-                // spender
-                var operatorId = allowance.delegatingSpenderOrElse(ownerId);
-                // If approveForAll is set to true, need signature from owner
-                // since only the owner can grant approveForAll
-                if (allowance.hasApprovedForAll() && allowance.approvedForAllOrThrow()) {
-                    operatorId = ownerId;
-                }
-                if (operatorId != ownerId) {
-                    failureStatus = INVALID_DELEGATING_SPENDER;
-                }
+            final var ownerId = allowance.ownerOrElse(AccountID.DEFAULT);
+            // If a spender who is granted approveForAll from owner and is granting
+            // allowance for a serial to another spender, need signature from the approveForAll
+            // spender
+            AccountID operatorId = ownerId;
+            if (allowance.hasDelegatingSpender()) {
+                operatorId = allowance.delegatingSpenderOrThrow();
+            }
+            // If approveForAll is set to true, need signature from owner
+            // since _only_ the owner can grant approveForAll
+            if (allowance.hasApprovedForAll()
+                    && allowance.approvedForAllOrThrow().booleanValue()) {
+                operatorId = ownerId;
+            }
+            if (!operatorId.equals(ownerId)) {
+                failureStatus = INVALID_DELEGATING_SPENDER;
+            }
+            if (!operatorId.equals(AccountID.DEFAULT) && !operatorId.equals(payerId)) {
                 context.requireKeyOrThrow(operatorId, failureStatus);
             }
         }
@@ -419,7 +430,7 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
             final var nft = uniqueTokenStore.get(tokenId, serialNum);
             final var token = tokenStore.get(tokenId);
 
-            AccountID accountOwner = owner.accountId();
+            final AccountID accountOwner = owner.accountId();
             validateTrue(isValidOwner(nft, accountOwner, token), SENDER_DOES_NOT_OWN_NFT_SERIAL_NO);
             final var copy = nft.copyBuilder().spenderId(spenderId).build();
             uniqueTokenStore.put(copy);
@@ -457,7 +468,7 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
             final TokenID tokenId) {
         for (int i = 0; i < ownerAllowances.size(); i++) {
             final var allowance = ownerAllowances.get(i);
-            if (allowance.spenderId() == spenderId && allowance.tokenId() == tokenId) {
+            if (allowance.spenderId().equals(spenderId) && allowance.tokenId().equals(tokenId)) {
                 return i;
             }
         }
@@ -561,8 +572,10 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
         final var existingSpenders = existingAllowances.stream()
                 .map(AccountCryptoAllowance::spenderId)
                 .collect(Collectors.toSet());
+        final var newSpenders = new HashSet<AccountID>();
         for (var key : newAllowances) {
-            if (!existingSpenders.contains(key.spender())) {
+            if (!existingSpenders.contains(key.spender()) && !newSpenders.contains(key.spender())) {
+                newSpenders.add(key.spender());
                 counter++;
             }
         }
@@ -581,8 +594,11 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
         final var existingKeys = existingAllowances.stream()
                 .map(key -> Pair.of(key.tokenId(), key.spenderId()))
                 .collect(Collectors.toSet());
+        final var newKeys = new HashSet<Pair<TokenID, AccountID>>();
         for (final var key : newAllowances) {
-            if (!existingKeys.contains(Pair.of(key.tokenId(), key.spender()))) {
+            final var newKey = Pair.of(key.tokenId(), key.spender());
+            if (!existingKeys.contains(newKey) && !newKeys.contains(newKey)) {
+                newKeys.add(newKey);
                 counter++;
             }
         }
@@ -601,8 +617,11 @@ public class CryptoApproveAllowanceHandler implements TransactionHandler {
         final var existingKeys = existingAllowances.stream()
                 .map(key -> Pair.of(key.tokenId(), key.spenderId()))
                 .collect(Collectors.toSet());
+        final var newKeys = new HashSet<Pair<TokenID, AccountID>>();
         for (final var key : newAllowances) {
-            if (!existingKeys.contains(Pair.of(key.tokenId(), key.spender()))) {
+            final var newKey = Pair.of(key.tokenId(), key.spender());
+            if (!existingKeys.contains(newKey) && !newKeys.contains(newKey)) {
+                newKeys.add(newKey);
                 counter++;
             }
         }
