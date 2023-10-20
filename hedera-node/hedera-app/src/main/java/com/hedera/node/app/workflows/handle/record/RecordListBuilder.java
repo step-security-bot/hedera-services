@@ -263,7 +263,9 @@ public final class RecordListBuilder {
                 // kept will be moved into this position.
                 childRecordBuilders.set(i, null);
             } else {
-                if (child.status() == ResponseCodeEnum.OK) child.status(ResponseCodeEnum.REVERTED_SUCCESS);
+                if (child.status() == ResponseCodeEnum.OK || child.status() == ResponseCodeEnum.SUCCESS) {
+                    child.status(ResponseCodeEnum.REVERTED_SUCCESS);
+                }
 
                 if (into != i) {
                     childRecordBuilders.set(into, child);

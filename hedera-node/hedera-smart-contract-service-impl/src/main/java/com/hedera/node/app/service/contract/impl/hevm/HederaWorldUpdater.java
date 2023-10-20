@@ -26,6 +26,7 @@ import com.hedera.hapi.node.transaction.ExchangeRate;
 import com.hedera.node.app.service.contract.impl.exec.scope.HederaNativeOperations;
 import com.hedera.node.app.service.contract.impl.exec.scope.HederaOperations;
 import com.hedera.node.app.service.contract.impl.exec.scope.SystemContractOperations;
+import com.hedera.node.app.service.contract.impl.records.ContractCallRecordBuilder;
 import com.hedera.node.app.service.contract.impl.state.HederaEvmAccount;
 import com.hedera.node.app.service.contract.impl.state.PendingCreation;
 import com.hedera.node.app.service.contract.impl.state.ProxyWorldUpdater;
@@ -270,7 +271,7 @@ public interface HederaWorldUpdater extends WorldUpdater {
      * @param result    The result of the system contract call
      * @param status    Whether the result is an error
      */
-    void externalizeSystemContractResults(@NonNull final ContractFunctionResult result, ResultStatus status);
+    ContractCallRecordBuilder externalizeSystemContractResults(@NonNull final ContractFunctionResult result, ResultStatus status);
 
     /**
      * Returns the {@link ExchangeRate} for the current consensus timestamp

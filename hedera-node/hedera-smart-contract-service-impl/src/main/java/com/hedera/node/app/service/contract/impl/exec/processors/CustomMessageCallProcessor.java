@@ -24,10 +24,16 @@ import static org.hyperledger.besu.evm.frame.ExceptionalHaltReason.INSUFFICIENT_
 import static org.hyperledger.besu.evm.frame.ExceptionalHaltReason.PRECOMPILE_ERROR;
 import static org.hyperledger.besu.evm.frame.MessageFrame.State.EXCEPTIONAL_HALT;
 
+import com.hedera.hapi.node.base.Transaction;
+import com.hedera.hapi.node.contract.ContractCallTransactionBody;
+import com.hedera.hapi.node.transaction.SignedTransaction;
+import com.hedera.hapi.node.transaction.TransactionBody;
 import com.hedera.node.app.service.contract.impl.exec.AddressChecks;
 import com.hedera.node.app.service.contract.impl.exec.FeatureFlags;
 import com.hedera.node.app.service.contract.impl.exec.systemcontracts.HederaSystemContract;
 import com.hedera.node.app.service.contract.impl.state.ProxyWorldUpdater;
+import com.hedera.node.app.service.contract.impl.utils.ConversionUtils;
+import com.hedera.node.app.service.contract.impl.utils.SystemContractUtils;
 import com.swirlds.config.api.Configuration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -182,6 +188,37 @@ public class CustomMessageCallProcessor extends MessageCallProcessor {
                 frame.decrementRemainingGas(gasRequirement);
             }
             finishPrecompileExecution(frame, fullResult.result());
+        }
+
+        if(frame.getState() != EXCEPTIONAL_HALT ) {
+            try {
+                final var updater = (ProxyWorldUpdater) frame.getWorldUpdater();
+                var recordBuilder = updater.externalizeSystemContractResults(
+                        SystemContractUtils.contractFunctionResultSuccessFor(
+                                gasRequirement,
+                                fullResult.output(),
+                                ConversionUtils.asEvmContractId(frame.getContractAddress())
+                        ),
+                        SystemContractUtils.ResultStatus.IS_SUCCESS);
+
+                var body = ContractCallTransactionBody.newBuilder()
+                        .contractID(ConversionUtils.asEvmContractId(frame.getContractAddress()))
+                        .build();
+                var txnBody = TransactionBody.newBuilder().contractCall(body).build();
+                final var bodyBytes = TransactionBody.PROTOBUF.toBytes(txnBody);
+                final var signedTransaction =
+                        SignedTransaction.newBuilder().bodyBytes(bodyBytes).build();
+                final var signedTransactionBytes = SignedTransaction.PROTOBUF.toBytes(signedTransaction);
+                final var transaction = Transaction.newBuilder()
+                        .signedTransactionBytes(signedTransactionBytes)
+                        .build();
+
+                recordBuilder.transaction(transaction);
+            } catch (UnsupportedOperationException e) {
+                //QuerySystemContractOperations will
+                // throw new UnsupportedOperationException("Cannot externalize result");
+                return;
+            }
         }
     }
 

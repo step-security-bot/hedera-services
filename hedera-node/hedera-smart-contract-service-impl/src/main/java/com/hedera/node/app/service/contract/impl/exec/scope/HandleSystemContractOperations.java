@@ -113,9 +113,9 @@ public class HandleSystemContractOperations implements SystemContractOperations 
      * {@inheritDoc}
      */
     @Override
-    public void externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
+    public ContractCallRecordBuilder externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
         final var childRecordBuilder = context.addChildRecordBuilder(ContractCallRecordBuilder.class);
-        childRecordBuilder
+        return childRecordBuilder
                 .contractID(result.contractID())
                 .status(status == ResultStatus.IS_ERROR ? FAIL_INVALID : SUCCESS)
                 .contractCallResult(result);

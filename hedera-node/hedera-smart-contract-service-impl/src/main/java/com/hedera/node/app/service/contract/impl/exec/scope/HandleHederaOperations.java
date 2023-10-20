@@ -283,7 +283,7 @@ public class HandleHederaOperations implements HederaOperations {
             final long number,
             @NonNull final CryptoCreateTransactionBody body,
             @Nullable final AccountID autoRenewAccountId) {
-        final var recordBuilder = context.dispatchChildTransaction(
+        final var recordBuilder = context.dispatchRemovableChildTransaction(
                 TransactionBody.newBuilder().cryptoCreateAccount(body).build(),
                 CryptoCreateRecordBuilder.class,
                 key -> true,

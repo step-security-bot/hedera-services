@@ -34,6 +34,7 @@ import com.hedera.hapi.node.contract.ContractFunctionResult;
 import com.hedera.hapi.node.transaction.ExchangeRate;
 import com.hedera.node.app.service.contract.impl.exec.scope.HandleHederaOperations;
 import com.hedera.node.app.service.contract.impl.hevm.HederaWorldUpdater;
+import com.hedera.node.app.service.contract.impl.records.ContractCallRecordBuilder;
 import com.hedera.node.app.service.contract.impl.utils.SystemContractUtils.ResultStatus;
 import com.hedera.node.app.spi.workflows.ResourceExhaustedException;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -435,9 +436,9 @@ public class ProxyWorldUpdater implements HederaWorldUpdater {
      * {@inheritDoc}
      */
     @Override
-    public void externalizeSystemContractResults(
+    public ContractCallRecordBuilder externalizeSystemContractResults(
             @NonNull final ContractFunctionResult result, final ResultStatus status) {
-        enhancement.systemOperations().externalizeResult(result, status);
+        return enhancement.systemOperations().externalizeResult(result, status);
     }
 
     /**
