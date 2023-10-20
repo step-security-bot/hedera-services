@@ -193,31 +193,16 @@ public class CustomMessageCallProcessor extends MessageCallProcessor {
         if(frame.getState() != EXCEPTIONAL_HALT ) {
             try {
                 final var updater = (ProxyWorldUpdater) frame.getWorldUpdater();
-                var recordBuilder = updater.externalizeSystemContractResults(
+                updater.externalizeSystemContractResults(
                         SystemContractUtils.contractFunctionResultSuccessFor(
                                 gasRequirement,
                                 fullResult.output(),
                                 ConversionUtils.asEvmContractId(frame.getContractAddress())
                         ),
                         SystemContractUtils.ResultStatus.IS_SUCCESS);
-
-                var body = ContractCallTransactionBody.newBuilder()
-                        .contractID(ConversionUtils.asEvmContractId(frame.getContractAddress()))
-                        .build();
-                var txnBody = TransactionBody.newBuilder().contractCall(body).build();
-                final var bodyBytes = TransactionBody.PROTOBUF.toBytes(txnBody);
-                final var signedTransaction =
-                        SignedTransaction.newBuilder().bodyBytes(bodyBytes).build();
-                final var signedTransactionBytes = SignedTransaction.PROTOBUF.toBytes(signedTransaction);
-                final var transaction = Transaction.newBuilder()
-                        .signedTransactionBytes(signedTransactionBytes)
-                        .build();
-
-                recordBuilder.transaction(transaction);
             } catch (UnsupportedOperationException e) {
                 //QuerySystemContractOperations will
                 // throw new UnsupportedOperationException("Cannot externalize result");
-                return;
             }
         }
     }

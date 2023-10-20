@@ -23,6 +23,7 @@ import static java.util.Objects.requireNonNull;
 import com.hedera.hapi.node.base.AccountID;
 import com.hedera.hapi.node.base.Key;
 import com.hedera.hapi.node.base.NftID;
+import com.hedera.hapi.node.base.Transaction;
 import com.hedera.hapi.node.contract.ContractFunctionResult;
 import com.hedera.hapi.node.state.token.Account;
 import com.hedera.hapi.node.state.token.Nft;
@@ -33,6 +34,7 @@ import com.hedera.node.app.service.contract.impl.annotations.TransactionScope;
 import com.hedera.node.app.service.contract.impl.records.ContractCallRecordBuilder;
 import com.hedera.node.app.service.contract.impl.utils.SystemContractUtils.ResultStatus;
 import com.hedera.node.app.spi.workflows.HandleContext;
+import com.hedera.pbj.runtime.io.buffer.Bytes;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.function.Predicate;
@@ -113,11 +115,13 @@ public class HandleSystemContractOperations implements SystemContractOperations 
      * {@inheritDoc}
      */
     @Override
-    public ContractCallRecordBuilder externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
+    public void externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
         final var childRecordBuilder = context.addChildRecordBuilder(ContractCallRecordBuilder.class);
-        return childRecordBuilder
+        childRecordBuilder
                 .contractID(result.contractID())
                 .status(status == ResultStatus.IS_ERROR ? FAIL_INVALID : SUCCESS)
+                //add dummy transaction, because SingleTransactionRecord require NonNull on build
+                .transaction(Transaction.newBuilder().signedTransactionBytes(Bytes.EMPTY).build())
                 .contractCallResult(result);
     }
 

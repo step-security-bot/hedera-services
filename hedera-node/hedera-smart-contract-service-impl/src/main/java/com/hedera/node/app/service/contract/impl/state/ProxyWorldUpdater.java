@@ -436,9 +436,9 @@ public class ProxyWorldUpdater implements HederaWorldUpdater {
      * {@inheritDoc}
      */
     @Override
-    public ContractCallRecordBuilder externalizeSystemContractResults(
+    public void externalizeSystemContractResults(
             @NonNull final ContractFunctionResult result, final ResultStatus status) {
-        return enhancement.systemOperations().externalizeResult(result, status);
+        enhancement.systemOperations().externalizeResult(result, status);
     }
 
     /**

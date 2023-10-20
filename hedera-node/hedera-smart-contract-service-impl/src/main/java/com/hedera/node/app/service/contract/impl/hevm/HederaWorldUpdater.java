@@ -271,7 +271,7 @@ public interface HederaWorldUpdater extends WorldUpdater {
      * @param result    The result of the system contract call
      * @param status    Whether the result is an error
      */
-    ContractCallRecordBuilder externalizeSystemContractResults(@NonNull final ContractFunctionResult result, ResultStatus status);
+    void externalizeSystemContractResults(@NonNull final ContractFunctionResult result, ResultStatus status);
 
     /**
      * Returns the {@link ExchangeRate} for the current consensus timestamp

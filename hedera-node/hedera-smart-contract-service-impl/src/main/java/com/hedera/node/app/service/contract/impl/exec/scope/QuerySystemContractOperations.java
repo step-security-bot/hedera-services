@@ -105,7 +105,7 @@ public class QuerySystemContractOperations implements SystemContractOperations {
      * {@inheritDoc}
      */
     @Override
-    public ContractCallRecordBuilder externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
+    public void externalizeResult(@NonNull final ContractFunctionResult result, @NonNull final ResultStatus status) {
         throw new UnsupportedOperationException("Cannot externalize result");
     }
 
