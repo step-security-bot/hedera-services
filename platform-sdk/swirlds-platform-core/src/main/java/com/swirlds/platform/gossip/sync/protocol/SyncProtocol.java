@@ -27,6 +27,8 @@ import com.swirlds.platform.gossip.FallenBehindManager;
 import com.swirlds.platform.gossip.SyncException;
 import com.swirlds.platform.gossip.SyncPermitProvider;
 import com.swirlds.platform.gossip.shadowgraph.ShadowGraphSynchronizer;
+import com.swirlds.platform.gossip.sync.LocalReconnect;
+import com.swirlds.platform.gossip.sync.config.SyncConfig;
 import com.swirlds.platform.metrics.SyncMetrics;
 import com.swirlds.platform.network.Connection;
 import com.swirlds.platform.network.NetworkProtocolException;
@@ -140,6 +142,9 @@ public class SyncProtocol implements Protocol {
      */
     @Override
     public boolean shouldInitiate() {
+        if (LocalReconnect.shouldPause(peerId)) {
+            return false;
+        }
         syncMetrics.opportunityToInitiateSync();
 
         // are there any reasons not to initiate?
@@ -162,6 +167,9 @@ public class SyncProtocol implements Protocol {
      */
     @Override
     public boolean shouldAccept() {
+        if (LocalReconnect.shouldPause(peerId)) {
+            return false;
+        }
         syncMetrics.incomingSyncRequestReceived();
 
         // are there any reasons not to accept?

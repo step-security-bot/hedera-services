@@ -11,11 +11,12 @@
                                           #    Gossip / Networking    #
                                           #############################
 sync.syncProtocolPermitCount,             2
+consensus.roundsExpired,                  30
 
                                           #############################
                                           #           State           #
                                           #############################
-state.saveStatePeriod,                    60
+state.saveStatePeriod,                    0
 
                                           #############################
                                           #      Event Creation       #
@@ -31,8 +32,8 @@ platformStatus.observingStatusDelay,      1ms
 
 event.enableEventStreaming,               false
 event.eventsLogDir,                       ./eventsStreams
-event.preconsensus.enableReplay,          true
-event.preconsensus.enableStorage,         true
+event.preconsensus.enableReplay,          false
+event.preconsensus.enableStorage,         false
 
                                           #############################
                                           #          Metrics          #
@@ -46,3 +47,4 @@ prometheus.endpointEnabled,               false
                                           #############################
 
 loadKeysFromPfxFiles,                     false
+event.useLegacyIntake, false

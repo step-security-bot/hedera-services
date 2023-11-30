@@ -217,12 +217,16 @@ public final class SignedStateFileWriter {
                     savedStateDirectory,
                     directory -> writeSignedStateFilesToDirectory(platformContext, selfId, directory, signedState));
 
+            Thread.sleep(1000);
+
             logger.info(STATE_TO_DISK.getMarker(), () -> new StateSavedToDiskPayload(
                             signedState.getRound(),
                             signedState.isFreezeState(),
                             stateToDiskReason == null ? "UNKNOWN" : stateToDiskReason.toString(),
                             savedStateDirectory)
                     .toString());
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
         } catch (final Throwable e) {
             logger.error(
                     EXCEPTION.getMarker(),
