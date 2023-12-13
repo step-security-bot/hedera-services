@@ -24,6 +24,7 @@ import com.swirlds.config.impl.converters.ByteConverter;
 import com.swirlds.config.impl.converters.ChronoUnitConverter;
 import com.swirlds.config.impl.converters.DoubleConverter;
 import com.swirlds.config.impl.converters.DurationConverter;
+import com.swirlds.config.impl.converters.EnumConverter;
 import com.swirlds.config.impl.converters.FileConverter;
 import com.swirlds.config.impl.converters.FloatConverter;
 import com.swirlds.config.impl.converters.IntegerConverter;
@@ -115,7 +116,7 @@ class ConverterService implements ConfigLifecycle {
                 .orElseGet(() -> getConverterType((Class<C>) converterClass.getSuperclass()));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
     @Nullable
     <T> T convert(@Nullable final String value, @NonNull final Class<T> targetClass) {
         throwIfNotInitialized();
@@ -126,20 +127,7 @@ class ConverterService implements ConfigLifecycle {
         if (Objects.equals(targetClass, String.class)) {
             return (T) value;
         }
-        final ConfigConverter<T> converter = (ConfigConverter<T>) converters.get(targetClass);
-
-        if (converter == null && targetClass.isEnum()) {
-            // FUTURE WORK: once logging is added to this module, log a warning here
-            // ("No converter defined for type '" + targetClass + "'. Converting using backup enum converter.");
-            try {
-                return (T) Enum.valueOf((Class<Enum>) targetClass, value);
-            } catch (final IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "Can not convert value '%s' of Enum '%s' by default. Please add a custom config converter."
-                                .formatted(value, targetClass),
-                        e);
-            }
-        }
+        final ConfigConverter<T> converter = getOrAdConverter(targetClass);
 
         if (converter == null) {
             throw new IllegalArgumentException("No converter defined for type '" + targetClass + "'");
@@ -221,6 +209,20 @@ class ConverterService implements ConfigLifecycle {
     <T> ConfigConverter<T> getConverterForType(@NonNull final Class<T> valueType) {
         throwIfNotInitialized();
         Objects.requireNonNull(valueType, "valueType must not be null");
-        return (ConfigConverter<T>) converters.get(valueType);
+        return getOrAdConverter(valueType);
     }
+
+    private <T> ConfigConverter<T> getOrAdConverter(Class<T> valueType) {
+        ConfigConverter<T> converter = (ConfigConverter<T>) converters.get(valueType);
+
+        if (converter == null && valueType.isEnum()) {
+            converter = new EnumConverter<>(valueType);
+            //this changes the immutability pattern in place, but it is simiar to what we are doing for logs...
+            //probably worth adding a concurrent map
+            converters.put(valueType, converter);
+            return converter;
+        }
+        return converter;
+    }
+
 }
