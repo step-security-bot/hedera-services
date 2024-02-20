@@ -17,6 +17,7 @@
 package com.hedera.node.app.service.mono.stats;
 
 import static com.hedera.node.app.service.mono.utils.SleepingPause.SLEEPING_PAUSE;
+import static com.swirlds.logging.legacy.LogMarker.EXCEPTION;
 
 import com.hedera.node.app.service.mono.context.properties.NodeLocalProperties;
 import com.hedera.node.app.service.mono.state.adapters.VirtualMapLike;
@@ -39,9 +40,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Singleton
 public class ServicesStatsManager {
+    private static final Logger logger = LogManager.getLogger(ServicesStatsManager.class);
     private static final long MIN_STAT_INTERVAL_UPDATE_MS = 100L;
     public static final String STAT_CATEGORY = "app";
     public static final String GAUGE_FORMAT = "%,13.2f";
@@ -110,6 +114,7 @@ public class ServicesStatsManager {
         entityUtilGauges.registerWith(platform);
         storage.get().registerMetrics(platform.getContext().getMetrics());
         bytecode.get().registerMetrics(platform.getContext().getMetrics());
+        logger.trace(EXCEPTION.getMarker(), "ServicesStatsManager called all metrics registration methods");
         final VirtualMapLike<EntityNumVirtualKey, OnDiskAccount> accountsOnDisk =
                 accounts.get().getOnDiskAccounts();
         if (accountsOnDisk != null) {

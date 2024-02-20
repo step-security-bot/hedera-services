@@ -16,6 +16,8 @@
 
 package com.swirlds.virtualmap.internal.merkle;
 
+import static com.swirlds.logging.legacy.LogMarker.EXCEPTION;
+
 import com.swirlds.metrics.api.Counter;
 import com.swirlds.metrics.api.IntegerAccumulator;
 import com.swirlds.metrics.api.IntegerGauge;
@@ -23,12 +25,15 @@ import com.swirlds.metrics.api.LongAccumulator;
 import com.swirlds.metrics.api.LongGauge;
 import com.swirlds.metrics.api.Metrics;
 import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Encapsulates statistics for a virtual map.
  */
 public class VirtualMapStatistics {
 
+    private static final Logger logger = LogManager.getLogger(VirtualMapStatistics.class);
     public static final String STAT_CATEGORY = "virtual_map";
 
     /** Metric name prefix for all virtual map metric names */
@@ -165,6 +170,8 @@ public class VirtualMapStatistics {
                 metrics,
                 VMAP_PREFIX + LIFECYCLE_PREFIX + "hashDurationMs_" + label,
                 "Virtual root copy hash duration, " + label + ", ms");
+
+        logger.trace(EXCEPTION.getMarker(), "Virtual map statistics had been registered");
     }
 
     /**

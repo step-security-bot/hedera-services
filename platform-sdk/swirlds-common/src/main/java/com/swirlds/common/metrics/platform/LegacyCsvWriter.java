@@ -252,6 +252,8 @@ public class LegacyCsvWriter {
             final Integer index = indexLookup.get(Pair.of(metric.getCategory(), metric.getName()));
             if (index != null) {
                 sortedSnapshots[index] = snapshot;
+            }else{
+                logger.trace(EXCEPTION.getMarker(), "a metric snapshot has been taken for {}-{} that wasn't here when the service was initialized", metric.getCategory(), metric.getName());
             }
         }
 
