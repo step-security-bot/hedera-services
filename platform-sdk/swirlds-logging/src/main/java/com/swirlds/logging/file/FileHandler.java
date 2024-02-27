@@ -44,7 +44,10 @@ public class FileHandler extends AbstractSyncedHandler {
     private static final String FILE_NAME_PROPERTY = "%s.file";
     private static final String APPEND_PROPERTY = "%s.append";
     private static final String DEFAULT_FILE_NAME = "swirlds-log.log";
+    private static final int STRING_BUFFER_CAPACITY = 8 * 1024;
+    private static final int SMALL_BUFFER = 4 * 1024;
     private final BufferedWriter bufferedWriter;
+    private StringBuffer buffer = new StringBuffer(STRING_BUFFER_CAPACITY);
 
     /**
      * Creates a new file handler.
@@ -92,9 +95,23 @@ public class FileHandler extends AbstractSyncedHandler {
      */
     @Override
     protected void handleEvent(@NonNull final LogEvent event) {
-        if (bufferedWriter != null) {
-            LineBasedFormat.print(bufferedWriter, event);
+        final StringBuffer msgBuffer = new StringBuffer(SMALL_BUFFER);
+        LineBasedFormat.print(msgBuffer, event);
+
+        if(buffer.capacity() < msgBuffer.length()) {
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.write(buffer.toString().toCharArray());
+                    buffer = new StringBuffer(STRING_BUFFER_CAPACITY);
+                } else {
+                    EMERGENCY_LOGGER.log(Level.ERROR, "Failed to write to file");
+                }
+            } catch (final Exception exception) {
+                EMERGENCY_LOGGER.log(Level.ERROR, "Failed to write to file", exception);
+            }
         }
+
+        buffer.append(msgBuffer);
     }
 
     @Override
