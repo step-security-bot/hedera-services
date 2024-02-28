@@ -24,12 +24,9 @@ import com.swirlds.logging.api.extensions.event.LogEvent;
 import com.swirlds.logging.api.extensions.event.LogMessage;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * A utility class that formats a {@link LogEvent} as a line based format.
@@ -47,8 +44,7 @@ public class LineBasedFormat {
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
 
-    private static final ConcurrentDateFormat DATE_FORMAT =
-            new ConcurrentDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US, TimeZone.getTimeZone("UTC"));
+    private static final EpocMillisParser EPOC_MILLIS_PARSER = new EpocMillisParser();
 
     /**
      * Converts the given object to a string. If the object is {@code null}, the given default value is used.
@@ -155,18 +151,7 @@ public class LineBasedFormat {
      * @return The string
      */
     private static String timestampAsString(long timestamp) {
-        try {
-            final StringBuilder sb = new StringBuilder(26);
-            sb.append(FORMATTER.format(Instant.ofEpochMilli(timestamp)));
-            // sb.append(DATE_FORMAT.format(timestamp));
-            while (sb.length() < 26) {
-                sb.append(' ');
-            }
-            return sb.toString();
-        } catch (final Throwable e) {
-            EMERGENCY_LOGGER.log(Level.ERROR, "Failed to format instant", e);
-            return "BROKEN-TIMESTAMP          ";
-        }
+        return EPOC_MILLIS_PARSER.parse(timestamp);
     }
 
     /**
