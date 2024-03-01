@@ -159,7 +159,7 @@ public class SendCommand implements Callable<Integer> {
                 for (var c : rightPadded.toCharArray()) {
                     final var v = Long.parseLong("" + c);
                     m *= 10;
-                    m += v;
+                    m += (int) v;
                 }
                 integral += m;
             }

@@ -136,16 +136,16 @@ public class KeyPackingUtils {
         for (int i = 7; i >= 0; i--) {
             int integer = 0;
             if (uint256KeyNonZeroBytes >= (4 + (i * Integer.BYTES))) {
-                integer |= ((long) reader.read(dataSource) & 255) << 24;
+                integer |= (int) (((long) reader.read(dataSource) & 255) << 24);
             }
             if (uint256KeyNonZeroBytes >= (3 + (i * Integer.BYTES))) {
-                integer |= ((long) reader.read(dataSource) & 255) << 16;
+                integer |= (int) (((long) reader.read(dataSource) & 255) << 16);
             }
             if (uint256KeyNonZeroBytes >= (2 + (i * Integer.BYTES))) {
-                integer |= ((long) reader.read(dataSource) & 255) << 8;
+                integer |= (int) (((long) reader.read(dataSource) & 255) << 8);
             }
             if (uint256KeyNonZeroBytes >= (1 + (i * Integer.BYTES))) {
-                integer |= ((long) reader.read(dataSource) & 255);
+                integer |= (int) ((long) reader.read(dataSource) & 255);
             }
             uint256[7 - i] = integer;
         }

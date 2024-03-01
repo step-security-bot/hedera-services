@@ -70,7 +70,7 @@ public class RecordFinalizerBase {
 
             final var netHbarChange = modifiedAcct.tinybarBalance() - persistedBalance;
             if (netHbarChange != 0) {
-                netHbarBalance += netHbarChange;
+                netHbarBalance += (int) netHbarChange;
                 hbarChanges.put(modifiedAcctId, netHbarChange);
             }
         }

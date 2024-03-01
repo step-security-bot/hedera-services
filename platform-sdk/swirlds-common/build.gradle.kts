@@ -20,6 +20,8 @@ plugins {
     id("com.hedera.hashgraph.java-test-fixtures")
 }
 
+tasks.compileJava { options.compilerArgs.add("-Xlint:-overloads") }
+
 mainModuleInfo {
     annotationProcessor("com.swirlds.config.processor")
 

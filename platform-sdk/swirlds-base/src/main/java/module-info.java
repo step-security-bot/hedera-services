@@ -10,5 +10,5 @@ module com.swirlds.base {
             com.swirlds.base.test.fixtures,
             com.swirlds.logging;
 
-    requires static com.github.spotbugs.annotations;
+    requires static transitive com.github.spotbugs.annotations;
 }

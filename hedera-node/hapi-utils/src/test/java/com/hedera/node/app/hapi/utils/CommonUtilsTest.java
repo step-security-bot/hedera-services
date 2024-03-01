@@ -311,7 +311,7 @@ class CommonUtilsTest {
             }
         }
 
-        private Method getSetter(final B builder, final Class type) {
+        private Method getSetter(final B builder, final Class<?> type) {
             return Stream.of(builder.getClass().getDeclaredMethods())
                     .filter(m -> m.getName().startsWith("set") && m.getParameterTypes()[0].equals(type))
                     .findFirst()

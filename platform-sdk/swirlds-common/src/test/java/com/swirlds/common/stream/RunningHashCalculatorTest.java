@@ -37,7 +37,7 @@ class RunningHashCalculatorTest {
         final DigestType digestType = DigestType.SHA_384;
         final Hash initialHash = new ImmutableHash(new byte[digestType.digestLength()]);
         final RunningHashCalculatorForStream<ObjectForTestStream> runningHashCalculator =
-                new RunningHashCalculatorForStream(cryptography);
+                new RunningHashCalculatorForStream<>(cryptography);
         runningHashCalculator.setRunningHash(initialHash);
 
         Hash expected = initialHash;
@@ -56,7 +56,7 @@ class RunningHashCalculatorTest {
     void nullInitialHashTest() throws InterruptedException {
         final DigestType digestType = DigestType.SHA_384;
         final RunningHashCalculatorForStream<ObjectForTestStream> runningHashCalculator =
-                new RunningHashCalculatorForStream(cryptography);
+                new RunningHashCalculatorForStream<>(cryptography);
         runningHashCalculator.setRunningHash(null);
 
         Hash expected = null;

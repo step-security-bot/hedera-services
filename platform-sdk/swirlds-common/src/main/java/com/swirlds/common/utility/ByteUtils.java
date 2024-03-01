@@ -168,7 +168,7 @@ public final class ByteUtils {
                 if (index >= data.length) {
                     break;
                 }
-                result += (data[index] & 0xff) << (8 * (1 - offset));
+                result += (short) ((data[index] & 0xff) << (8 * (1 - offset)));
             }
             return result;
         }

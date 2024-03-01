@@ -48,7 +48,7 @@ public final class MerkleDbFileUtils {
                 // Reached EOF
                 break;
             }
-            totalBytesRead += bytesRead;
+            totalBytesRead += (int) bytesRead;
         }
         return totalBytesRead;
     }
@@ -93,7 +93,7 @@ public final class MerkleDbFileUtils {
                 // Reached EOF
                 break;
             }
-            totalBytesRead += bytesRead;
+            totalBytesRead += (int) bytesRead;
         }
         return totalBytesRead;
     }
@@ -178,7 +178,7 @@ public final class MerkleDbFileUtils {
             if (bytesTransferred <= 0) {
                 break;
             }
-            totalBytesTransferred += bytesTransferred;
+            totalBytesTransferred += (int) bytesTransferred;
         }
         return totalBytesTransferred;
     }

@@ -1599,9 +1599,9 @@ public final class VirtualNodeCache<K extends VirtualKey, V extends VirtualValue
         @SuppressWarnings("NonAtomicOperationOnVolatileField")
         void setFlag(int bit, boolean value) {
             if (value) {
-                flags |= (1 << bit);
+                flags |= (byte) (1 << bit);
             } else {
-                flags &= ~(1 << bit);
+                flags &= (byte) ~(1 << bit);
             }
         }
 

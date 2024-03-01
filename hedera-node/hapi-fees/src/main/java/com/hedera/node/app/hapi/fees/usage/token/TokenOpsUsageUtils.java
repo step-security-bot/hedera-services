@@ -171,18 +171,19 @@ public enum TokenOpsUsageUtils {
 
         final var tokenEntitySizes = TOKEN_ENTITY_SIZES;
         var baseSize = tokenEntitySizes.totalBytesInTokenReprGiven(op.getSymbol(), op.getName());
-        baseSize += keySizeIfPresent(op, TokenCreateTransactionBody::hasKycKey, TokenCreateTransactionBody::getKycKey);
-        baseSize +=
+        baseSize += (int)
+                keySizeIfPresent(op, TokenCreateTransactionBody::hasKycKey, TokenCreateTransactionBody::getKycKey);
+        baseSize += (int)
                 keySizeIfPresent(op, TokenCreateTransactionBody::hasWipeKey, TokenCreateTransactionBody::getWipeKey);
-        baseSize +=
+        baseSize += (int)
                 keySizeIfPresent(op, TokenCreateTransactionBody::hasAdminKey, TokenCreateTransactionBody::getAdminKey);
-        baseSize += keySizeIfPresent(
+        baseSize += (int) keySizeIfPresent(
                 op, TokenCreateTransactionBody::hasSupplyKey, TokenCreateTransactionBody::getSupplyKey);
-        baseSize += keySizeIfPresent(
+        baseSize += (int) keySizeIfPresent(
                 op, TokenCreateTransactionBody::hasFreezeKey, TokenCreateTransactionBody::getFreezeKey);
-        baseSize += keySizeIfPresent(
+        baseSize += (int) keySizeIfPresent(
                 op, TokenCreateTransactionBody::hasFeeScheduleKey, TokenCreateTransactionBody::getFeeScheduleKey);
-        baseSize +=
+        baseSize += (int)
                 keySizeIfPresent(op, TokenCreateTransactionBody::hasPauseKey, TokenCreateTransactionBody::getPauseKey);
         baseSize += op.getMemoBytes().size();
         if (op.hasAutoRenewAccount()) {
