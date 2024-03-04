@@ -188,6 +188,8 @@ tasks.withType<Javadoc>().configureEach {
             "implSpec:a:Implementation Requirements:",
             "implNote:a:Implementation Note:"
         )
+        addStringOption("Xdoclint:all,-missing", "-quiet")
+        addStringOption("Xwerror", "-quiet")
     }
 }
 
