@@ -105,7 +105,7 @@ public final class SmartContractMapKey implements VirtualKey {
         out.writeLong(keyValuePairIndex);
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     void serialize(final ByteBuffer buffer) {
         buffer.putLong(contractId);
         buffer.putLong(keyValuePairIndex);
@@ -125,7 +125,7 @@ public final class SmartContractMapKey implements VirtualKey {
         keyValuePairIndex = in.readLong();
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     void deserialize(final ByteBuffer buffer) {
         contractId = buffer.getLong();
         keyValuePairIndex = buffer.getLong();

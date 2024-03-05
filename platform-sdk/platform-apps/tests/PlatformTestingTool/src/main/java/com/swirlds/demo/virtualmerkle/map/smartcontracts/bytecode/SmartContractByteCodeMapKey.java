@@ -92,7 +92,7 @@ public final class SmartContractByteCodeMapKey implements VirtualLongKey {
         out.writeLong(contractId);
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     void serialize(final ByteBuffer buffer) {
         buffer.putLong(contractId);
     }
@@ -106,7 +106,7 @@ public final class SmartContractByteCodeMapKey implements VirtualLongKey {
         contractId = in.readLong();
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     void deserialize(final ByteBuffer buffer) {
         contractId = buffer.getLong();
     }

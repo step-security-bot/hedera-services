@@ -94,7 +94,7 @@ public class AccountVirtualMapValue implements VirtualValue {
         out.writeLong(uid);
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated
     void serialize(final ByteBuffer buffer) {
         buffer.putLong(balance);
         buffer.putLong(sendThreshold);
