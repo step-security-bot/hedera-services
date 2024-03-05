@@ -42,6 +42,7 @@ dependencies.components {
             "com.google.android:annotations",
             "com.google.code.findbugs:annotations",
             "com.google.code.findbugs:jsr305",
+            "com.google.errorprone:error_prone_annotations",
             "com.google.guava:listenablefuture",
             "org.checkerframework:checker-compat-qual",
             "org.checkerframework:checker-qual",
@@ -90,7 +91,11 @@ dependencies.components {
         params(annotationLibraries)
     }
     withModule<RemoveDependenciesMetadataRule>("com.google.guava:guava") {
-        params(annotationLibraries - "com.google.code.findbugs:jsr305")
+        params(
+            annotationLibraries -
+                "com.google.code.findbugs:jsr305" -
+                "com.google.errorprone:error_prone_annotations"
+        )
     }
     withModule<RemoveDependenciesMetadataRule>("com.google.protobuf:protobuf-java-util") {
         params(annotationLibraries)
