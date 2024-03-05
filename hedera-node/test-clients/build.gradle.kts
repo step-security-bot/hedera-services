@@ -42,6 +42,8 @@ eetModuleInfo {
     requires("org.testcontainers.junit.jupiter")
 }
 
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
 sourceSets {
     // Needed because "resource" directory is misnamed. See
     // https://github.com/hashgraph/hedera-services/issues/3361

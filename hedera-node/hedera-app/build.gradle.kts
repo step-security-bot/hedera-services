@@ -126,6 +126,10 @@ jmhModuleInfo {
     requires("jmh.core")
 }
 
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
+
 tasks.withType<Test> {
     testLogging.exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 }

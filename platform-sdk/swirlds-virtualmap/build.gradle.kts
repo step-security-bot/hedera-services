@@ -54,6 +54,10 @@ hammerModuleInfo {
     runtimeOnly("com.swirlds.config.impl")
 }
 
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
+
 tasks.register<JMHTask>("jmhReconnect") {
     includes.set(listOf("Reconnect.*"))
     jvmArgs.set(listOf("-Xmx16g"))

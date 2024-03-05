@@ -32,3 +32,5 @@ testModuleInfo {
     requires("org.mockito.junit.jupiter")
     requiresStatic("com.github.spotbugs.annotations")
 }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

@@ -124,6 +124,29 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 
 tasks.jar { exclude("**/classpath.index") }
 
+val deactivatedCompileLintOptions =
+    listOf(
+        // In Gradle, a module does not see the upstream (not-yet-compiled) modules. This could
+        // only be solved by calling 'javac' with '--source-module-path' to make other sources
+        // known. But this is at odds with how Gradle's incremental compilation calls the
+        // compiler for a subset of Java files for each project individually.
+        "module", // module not found when doing 'exports to ...'
+        "serial", // serializable class ... has no definition of serialVersionUID
+        "processing", // No processor claimed any of these annotations: ...
+        "try", // auto-closeable resource ignore is never referenced... (AutoClosableLock)
+        "missing-explicit-ctor", // class ... declares no explicit constructors
+
+        // Needed because we use deprecation internally and do not fix all uses right away
+        "removal",
+        "deprecation",
+
+        // The following checks could be activated and fixed:
+        "this-escape", // calling public/protected method in constructor
+        "overrides", // overrides equals, but neither it ... overrides hashCode method
+        "unchecked",
+        "rawtypes"
+    )
+
 tasks.withType<JavaCompile>().configureEach {
     // Track the full Java version as input (e.g. 17.0.3 vs. 17.0.9).
     // By default, Gradle only tracks the major version as defined in the toolchain (e.g. 17).
@@ -134,27 +157,6 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-implicit:none")
     options.compilerArgs.add("-Werror")
-
-    val deactivatedCompileLintOptions =
-        listOf(
-            "serial", // serializable class ... has no definition of serialVersionUID
-            "processing", // No processor claimed any of these annotations: ...
-            "try", // auto-closeable resource ignore is never referenced... (AutoClosableLock)
-            "missing-explicit-ctor", // class ... declares no explicit constructors
-
-            // Needed because we use deprecation internally and do not fix all users right away
-            "removal",
-            "deprecation",
-
-            // Should the following be activated?
-            "this-escape", // calling public/protected method in constructor
-            "overrides", // overrides equals, but neither it ... overrides hashCode method
-            "unchecked",
-            "rawtypes",
-            "exports", // Not exported type used in public API of exported package
-            "module" // module not found
-        )
-
     options.compilerArgs.add("-Xlint:all,-" + deactivatedCompileLintOptions.joinToString(",-"))
 
     doLast {

@@ -80,3 +80,7 @@ val writeSemanticVersionProperties =
     }
 
 tasks.processResources { from(writeSemanticVersionProperties) }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

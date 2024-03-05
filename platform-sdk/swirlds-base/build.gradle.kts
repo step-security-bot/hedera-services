@@ -25,3 +25,5 @@ testModuleInfo {
     requires("org.junit.jupiter.api")
     requires("org.assertj.core")
 }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

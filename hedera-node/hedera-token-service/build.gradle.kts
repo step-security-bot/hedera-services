@@ -20,3 +20,5 @@ plugins {
 }
 
 description = "Hedera Token Service API"
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

@@ -27,6 +27,8 @@ testModuleInfo {
     requires("org.mockito.junit.jupiter")
 }
 
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
 tasks.shadowJar {
     manifest {
         attributes("Main-Class" to "com.swirlds.cli.PlatformCli", "Multi-Release" to "true")

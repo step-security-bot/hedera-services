@@ -46,3 +46,5 @@ tasks.withType<ProtobufExtract>().configureEach {
 }
 
 tasks.withType<Javadoc>().configureEach { enabled = false }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }

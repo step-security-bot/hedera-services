@@ -48,3 +48,7 @@ hammerModuleInfo {
     requires("org.junit.jupiter.params")
     runtimeOnly("com.swirlds.config.impl")
 }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

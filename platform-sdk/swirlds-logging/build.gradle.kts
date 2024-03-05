@@ -43,3 +43,7 @@ jmhModuleInfo {
     requires("com.github.spotbugs.annotations")
     requires("jmh.core")
 }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

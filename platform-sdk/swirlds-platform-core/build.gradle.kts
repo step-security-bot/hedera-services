@@ -49,3 +49,7 @@ testModuleInfo {
     requires("org.mockito")
     requiresStatic("com.github.spotbugs.annotations")
 }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

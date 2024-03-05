@@ -37,3 +37,5 @@ testModuleInfo {
     requiresStatic("com.github.spotbugs.annotations")
     requires("com.google.protobuf")
 }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }

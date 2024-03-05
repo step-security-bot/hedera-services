@@ -25,3 +25,5 @@ testModuleInfo {
     requires("org.mockito")
     requires("org.mockito.junit.jupiter")
 }
+
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
