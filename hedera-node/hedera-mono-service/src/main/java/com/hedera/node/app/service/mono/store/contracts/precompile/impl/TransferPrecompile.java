@@ -549,7 +549,7 @@ public class TransferPrecompile extends AbstractWritePrecompile {
                 accountID = generateAccountIDWithAliasCalculatedFrom(accountID);
             }
 
-            DecodingFacade.addSignedAdjustment(fungibleTransfers, tokenType, accountID, amount, false);
+            DecodingFacade.addSignedAdjustment(fungibleTransfers, tokenType, accountID, amount, false, false);
         }
     }
 
