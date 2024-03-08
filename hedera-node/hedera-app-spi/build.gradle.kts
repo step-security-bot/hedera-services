@@ -21,6 +21,10 @@ plugins {
 
 description = "Hedera Application - SPI"
 
+// Remove the following line to enable all 'javac' lint checks that we have turned on by default
+// and then fix the reported issues.
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
+
 testModuleInfo {
     requires("com.hedera.node.app.spi")
     requires("org.apache.commons.lang3")
@@ -31,5 +35,3 @@ testModuleInfo {
     requires("org.mockito.junit.jupiter")
     requiresStatic("com.github.spotbugs.annotations")
 }
-
-tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

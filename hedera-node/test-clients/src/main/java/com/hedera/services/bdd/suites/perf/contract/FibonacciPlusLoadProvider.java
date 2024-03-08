@@ -251,7 +251,7 @@ public class FibonacciPlusLoadProvider extends HapiSuite {
                     contractStorage.put(thisContract, slots);
                 }
             }
-            numSlots /= (int) scale;
+            numSlots /= scale;
             numContractsWithThisManySlots *= r;
         }
         LOG.info("Will use {} contracts in total", nextContractNum);

@@ -18,8 +18,6 @@ package com.swirlds.config.impl.converters;
 
 import com.swirlds.config.api.converter.ConfigConverter;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -37,8 +35,8 @@ public final class UrlConverter implements ConfigConverter<URL> {
             throw new NullPointerException("null can not be converted");
         }
         try {
-            return new URI(value).toURL();
-        } catch (MalformedURLException | URISyntaxException e) {
+            return new URL(value);
+        } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Value '" + value + "' is not a valid URL", e);
         }
     }

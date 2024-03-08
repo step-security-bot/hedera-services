@@ -117,7 +117,7 @@ final class SidecarWriterV6 implements AutoCloseable {
             default -> throw new IllegalStateException("Unexpected value: " + sidecarType);
         }
         // update bytes written counter
-        bytesWritten += (int) transactionSidecarRecord.length();
+        bytesWritten += transactionSidecarRecord.length();
         // write protobuf format to file
         // FUTURE can change once https://github.com/hashgraph/pbj/issues/44 is fixed to:
         // ProtoWriterTools.writeTag(outputStream, SIDECAR_RECORDS, WIRE_TYPE_DELIMITED);

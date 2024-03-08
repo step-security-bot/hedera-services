@@ -21,13 +21,15 @@ plugins {
 
 description = "Hedera Services Command-Line Clients"
 
+// Remove the following line to enable all 'javac' lint checks that we have turned on by default
+// and then fix the reported issues.
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
+
 testModuleInfo {
     requires("org.junit.jupiter.api")
     requires("org.mockito")
     requires("org.mockito.junit.jupiter")
 }
-
-tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
 
 tasks.shadowJar {
     manifest {

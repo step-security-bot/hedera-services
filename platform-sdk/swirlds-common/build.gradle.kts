@@ -20,7 +20,11 @@ plugins {
     id("com.hedera.hashgraph.java-test-fixtures")
 }
 
-tasks.compileJava { options.compilerArgs.add("-Xlint:-overloads") }
+// Remove the following line to enable all 'javac' lint checks that we have turned on by default
+// and then fix the reported issues.
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports,-lossy-conversions,-overloads") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
 
 mainModuleInfo {
     annotationProcessor("com.swirlds.config.processor")
@@ -41,7 +45,3 @@ testModuleInfo {
     requires("org.mockito.junit.jupiter")
     requiresStatic("com.github.spotbugs.annotations")
 }
-
-tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
-
-tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

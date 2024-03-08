@@ -22,6 +22,12 @@ plugins {
 
 description = "Hedera Application - MONO Service Implementation"
 
+// Remove the following line to enable all 'javac' lint checks that we have turned on by default
+// and then fix the reported issues.
+tasks.compileJava { options.compilerArgs.add("-Xlint:-exports,-lossy-conversions") }
+
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
+
 mainModuleInfo { annotationProcessor("dagger.compiler") }
 
 testModuleInfo {
@@ -80,7 +86,3 @@ val writeSemanticVersionProperties =
     }
 
 tasks.processResources { from(writeSemanticVersionProperties) }
-
-tasks.compileJava { options.compilerArgs.add("-Xlint:-exports") }
-
-tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }

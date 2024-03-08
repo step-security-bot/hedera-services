@@ -134,7 +134,7 @@ public class TokenDissociateFromAccountHandler implements TransactionHandler {
                 if (token != null && (token.tokenType() == TokenType.NON_FUNGIBLE_UNIQUE)) {
                     // Confusing, but we're _adding_ the number of NFTs to _subtract_ from the account. The total
                     // subtraction will be done outside the dissociation loop
-                    numNftsToSubtract += (int) tokenRelBalance;
+                    numNftsToSubtract += tokenRelBalance;
                 }
             } else {
                 // Handle active tokens

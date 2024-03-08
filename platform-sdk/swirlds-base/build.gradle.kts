@@ -21,9 +21,11 @@ plugins {
     id("com.hedera.hashgraph.java-test-fixtures")
 }
 
+// Remove the following line to enable all 'javac' lint checks that we have turned on by default
+// and then fix the reported issues.
+tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
+
 testModuleInfo {
     requires("org.junit.jupiter.api")
     requires("org.assertj.core")
 }
-
-tasks.compileTestFixturesJava { options.compilerArgs.add("-Xlint:-exports") }
