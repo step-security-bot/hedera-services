@@ -80,7 +80,6 @@ import com.swirlds.platform.system.status.PlatformStatusManager;
 import com.swirlds.platform.system.status.actions.CatastrophicFailureAction;
 import com.swirlds.platform.util.HashLogger;
 import com.swirlds.platform.wiring.components.ApplicationTransactionPrehandlerWiring;
-import com.swirlds.platform.wiring.components.BirthRoundMigrationShimWiring;
 import com.swirlds.platform.wiring.components.ConsensusRoundHandlerWiring;
 import com.swirlds.platform.wiring.components.EventCreationManagerWiring;
 import com.swirlds.platform.wiring.components.EventDurabilityNexusWiring;
@@ -91,9 +90,9 @@ import com.swirlds.platform.wiring.components.HashLoggerWiring;
 import com.swirlds.platform.wiring.components.IssDetectorWiring;
 import com.swirlds.platform.wiring.components.IssHandlerWiring;
 import com.swirlds.platform.wiring.components.LatestCompleteStateNotifierWiring;
+import com.swirlds.platform.wiring.components.PassThroughWiring;
 import com.swirlds.platform.wiring.components.PcesReplayerWiring;
 import com.swirlds.platform.wiring.components.PcesWriterWiring;
-import com.swirlds.platform.wiring.components.PostHashCollectorWiring;
 import com.swirlds.platform.wiring.components.RunningHashUpdaterWiring;
 import com.swirlds.platform.wiring.components.ShadowgraphWiring;
 import com.swirlds.platform.wiring.components.StateHasherWiring;
@@ -119,7 +118,7 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
     private final WiringModel model;
 
     private final ComponentWiring<EventHasher, GossipEvent> eventHasherWiring;
-    private final PostHashCollectorWiring postHashCollectorWiring;
+    private final PassThroughWiring<GossipEvent> postHashCollectorWiring;
     private final ComponentWiring<InternalEventValidator, GossipEvent> internalEventValidatorWiring;
     private final ComponentWiring<EventDeduplicator, GossipEvent> eventDeduplicatorWiring;
     private final EventSignatureValidatorWiring eventSignatureValidatorWiring;
@@ -151,7 +150,7 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
     private final ComponentWiring<SavedStateController, Void> savedStateControllerWiring;
     private final StateHasherWiring signedStateHasherWiring;
     private final PlatformCoordinator platformCoordinator;
-    private final BirthRoundMigrationShimWiring birthRoundMigrationShimWiring;
+    private final ComponentWiring<BirthRoundMigrationShim, GossipEvent> birthRoundMigrationShimWiring;
 
     /**
      * Constructor.
@@ -189,13 +188,20 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
                 .getConfigData(EventConfig.class)
                 .getAncientMode();
         if (ancientMode == AncientMode.BIRTH_ROUND_THRESHOLD) {
-            birthRoundMigrationShimWiring = BirthRoundMigrationShimWiring.create(model);
+            birthRoundMigrationShimWiring = new ComponentWiring<>(
+                    model,
+                    BirthRoundMigrationShim.class,
+                    model.schedulerBuilder("birthRoundMigrationShim")
+                            .withType(TaskSchedulerType.DIRECT_THREADSAFE)
+                            .build()
+                            .cast());
         } else {
             birthRoundMigrationShimWiring = null;
         }
 
         eventHasherWiring = new ComponentWiring<>(model, EventHasher.class, schedulers.eventHasherScheduler());
-        postHashCollectorWiring = PostHashCollectorWiring.create(schedulers.postHashCollectorScheduler());
+        postHashCollectorWiring =
+                new PassThroughWiring<>(model, "GossipEvent", schedulers.postHashCollectorScheduler());
         internalEventValidatorWiring = new ComponentWiring<>(
                 model, InternalEventValidator.class, schedulers.internalEventValidatorScheduler());
         eventDeduplicatorWiring =
@@ -317,17 +323,17 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
         final InputWire<GossipEvent> pipelineInputWire;
         if (birthRoundMigrationShimWiring != null) {
             birthRoundMigrationShimWiring
-                    .eventOutput()
+                    .getOutputWire()
                     .solderTo(eventHasherWiring.getInputWire(EventHasher::hashEvent));
-            pipelineInputWire = birthRoundMigrationShimWiring.eventInput();
+            pipelineInputWire = birthRoundMigrationShimWiring.getInputWire(BirthRoundMigrationShim::migrateEvent);
         } else {
             pipelineInputWire = eventHasherWiring.getInputWire(EventHasher::hashEvent);
         }
 
         gossipWiring.eventOutput().solderTo(pipelineInputWire);
-        eventHasherWiring.getOutputWire().solderTo(postHashCollectorWiring.eventInput());
+        eventHasherWiring.getOutputWire().solderTo(postHashCollectorWiring.getInputWire());
         postHashCollectorWiring
-                .eventOutput()
+                .getOutputWire()
                 .solderTo(internalEventValidatorWiring.getInputWire(InternalEventValidator::validateEvent));
         internalEventValidatorWiring
                 .getOutputWire()
@@ -432,6 +438,18 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
         stateSignatureCollectorWiring
                 .getCompleteStatesOutput()
                 .solderTo(latestCompleteStateNotifierWiring.completeStateNotificationInputWire());
+
+        buildUnsolderedWires();
+    }
+
+    /**
+     * {@link ComponentWiring} objects build their input wires when you first request them. Normally that happens when
+     * we are soldering things together, but there are a few wires that aren't soldered and aren't used until later in
+     * the lifecycle. This method forces those wires to be built.
+     */
+    private void buildUnsolderedWires() {
+        eventDeduplicatorWiring.getInputWire(EventDeduplicator::clear);
+        futureEventBufferWiring.getInputWire(FutureEventBuffer::clear);
     }
 
     /**
@@ -686,7 +704,7 @@ public class PlatformWiring implements Startable, Stoppable, Clearable {
      */
     @NonNull
     public LongSupplier getIntakeQueueSizeSupplier() {
-        return postHashCollectorWiring.unprocessedTaskCountSupplier();
+        return () -> postHashCollectorWiring.getScheduler().getUnprocessedTaskCount();
     }
 
     /**
