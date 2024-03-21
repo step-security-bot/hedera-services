@@ -32,7 +32,7 @@ module com.hedera.node.test.clients {
 
     requires transitive com.hedera.node.app.hapi.fees;
     requires transitive com.hedera.node.app.hapi.utils;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.fasterxml.jackson.annotation;
     requires transitive com.google.common;
     requires transitive com.google.protobuf;

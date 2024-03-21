@@ -19,7 +19,7 @@ package com.hedera.node.app.spi.records;
 import static com.hedera.hapi.node.base.ResponseCodeEnum.INVALID_NODE_ACCOUNT;
 import static com.hedera.hapi.node.base.ResponseCodeEnum.INVALID_PAYER_SIGNATURE;
 import static com.hedera.hapi.node.base.ResponseCodeEnum.UNKNOWN;
-import static com.hedera.node.app.spi.HapiUtils.TIMESTAMP_COMPARATOR;
+import static com.swirlds.platform.state.spi.HapiUtils.TIMESTAMP_COMPARATOR;
 import static java.util.Collections.emptyList;
 
 import com.hedera.hapi.node.base.AccountID;
@@ -28,7 +28,7 @@ import com.hedera.hapi.node.base.Timestamp;
 import com.hedera.hapi.node.base.TransactionID;
 import com.hedera.hapi.node.transaction.TransactionReceipt;
 import com.hedera.hapi.node.transaction.TransactionRecord;
-import com.hedera.node.app.spi.Service;
+import com.swirlds.platform.state.spi.Service;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.ArrayList;

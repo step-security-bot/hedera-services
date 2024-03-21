@@ -11,7 +11,7 @@ module com.hedera.node.app.service.file.impl {
     requires transitive com.hedera.node.app.service.mono;
     requires transitive com.hedera.node.app.spi;
     requires transitive com.hedera.node.config;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.hedera.pbj.runtime;
     requires transitive dagger;
     requires transitive javax.inject;

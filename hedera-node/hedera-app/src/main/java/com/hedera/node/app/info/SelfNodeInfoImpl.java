@@ -16,12 +16,12 @@
 
 package com.hedera.node.app.info;
 
-import static com.hedera.node.app.spi.HapiUtils.parseAccount;
+import static com.swirlds.platform.state.spi.HapiUtils.parseAccount;
 import static java.util.Objects.requireNonNull;
 
 import com.hedera.hapi.node.base.AccountID;
 import com.hedera.hapi.node.base.SemanticVersion;
-import com.hedera.node.app.spi.info.SelfNodeInfo;
+import com.swirlds.platform.state.spi.info.SelfNodeInfo;
 import com.hedera.node.app.version.HederaSoftwareVersion;
 import com.swirlds.common.utility.CommonUtils;
 import com.swirlds.platform.system.address.Address;

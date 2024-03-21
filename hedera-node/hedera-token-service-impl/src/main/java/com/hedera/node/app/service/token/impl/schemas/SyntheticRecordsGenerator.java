@@ -17,15 +17,15 @@
 package com.hedera.node.app.service.token.impl.schemas;
 
 import static com.hedera.node.app.service.token.impl.comparator.TokenComparators.ACCOUNT_COMPARATOR;
-import static com.hedera.node.app.spi.HapiUtils.EMPTY_KEY_LIST;
-import static com.hedera.node.app.spi.HapiUtils.FUNDING_ACCOUNT_EXPIRY;
+import static com.swirlds.platform.state.spi.HapiUtils.EMPTY_KEY_LIST;
+import static com.swirlds.platform.state.spi.HapiUtils.FUNDING_ACCOUNT_EXPIRY;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.hedera.hapi.node.base.AccountID;
 import com.hedera.hapi.node.base.Key;
 import com.hedera.hapi.node.state.token.Account;
 import com.hedera.node.app.service.token.impl.BlocklistParser;
-import com.hedera.node.app.spi.workflows.record.GenesisRecordsBuilder;
+import com.swirlds.platform.state.spi.workflows.record.GenesisRecordsBuilder;
 import com.hedera.node.config.data.AccountsConfig;
 import com.hedera.node.config.data.BootstrapConfig;
 import com.hedera.node.config.data.HederaConfig;

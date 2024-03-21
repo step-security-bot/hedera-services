@@ -13,7 +13,7 @@ module com.hedera.node.app.service.token {
     uses com.hedera.node.app.service.token.TokenService;
 
     requires transitive com.hedera.node.app.spi;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.hedera.pbj.runtime;
     requires transitive com.swirlds.config.api;
     requires com.hedera.node.app.hapi.utils;
@@ -21,4 +21,5 @@ module com.hedera.node.app.service.token {
     requires com.github.spotbugs.annotations;
     requires com.swirlds.common;
     requires transitive org.apache.logging.log4j;
+    requires com.swirlds.platform.core;
 }

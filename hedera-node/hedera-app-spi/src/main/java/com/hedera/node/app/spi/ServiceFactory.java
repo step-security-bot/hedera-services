@@ -16,6 +16,7 @@
 
 package com.hedera.node.app.spi;
 
+import com.swirlds.platform.state.spi.Service;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Iterator;
 import java.util.Objects;

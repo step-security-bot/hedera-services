@@ -18,9 +18,9 @@ package com.hedera.node.app.info;
 
 import static java.util.Objects.requireNonNull;
 
-import com.hedera.node.app.spi.info.NetworkInfo;
-import com.hedera.node.app.spi.info.NodeInfo;
-import com.hedera.node.app.spi.info.SelfNodeInfo;
+import com.swirlds.platform.state.spi.info.NetworkInfo;
+import com.swirlds.platform.state.spi.info.NodeInfo;
+import com.swirlds.platform.state.spi.info.SelfNodeInfo;
 import com.hedera.node.config.ConfigProvider;
 import com.hedera.node.config.data.LedgerConfig;
 import com.hedera.pbj.runtime.io.buffer.Bytes;

@@ -48,7 +48,7 @@ jmhModuleInfo {
     requires("com.hedera.node.app.hapi.utils")
     requires("com.hedera.node.app.service.mono.test.fixtures")
     requires("com.hedera.node.app.spi")
-    requires("com.hedera.node.hapi")
+    requires("com.swirlds.platform.hapi")
     requires("com.github.spotbugs.annotations")
     requires("com.google.common")
     requires("com.google.protobuf")

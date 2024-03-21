@@ -8,7 +8,7 @@ module com.hedera.node.app.test.fixtures {
     requires com.hedera.node.app.service.token;
     requires com.hedera.node.config.test.fixtures;
     requires com.hedera.node.config;
-    requires com.hedera.node.hapi;
+    requires com.swirlds.platform.hapi;
     requires com.hedera.pbj.runtime;
     requires com.swirlds.common;
     requires com.swirlds.config.api;
@@ -17,4 +17,5 @@ module com.hedera.node.app.test.fixtures {
     requires com.swirlds.platform.core;
     requires org.assertj.core;
     requires static com.github.spotbugs.annotations;
+    requires com.swirlds.platform.core.test.fixtures;
 }

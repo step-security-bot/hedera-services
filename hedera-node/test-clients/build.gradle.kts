@@ -27,7 +27,7 @@ mainModuleInfo { runtimeOnly("org.junit.platform.launcher") }
 
 itestModuleInfo {
     requires("com.hedera.node.test.clients")
-    requires("com.hedera.node.hapi")
+    requires("com.swirlds.platform.hapi")
     requires("org.apache.commons.lang3")
     requires("org.junit.jupiter.api")
     requires("org.testcontainers")

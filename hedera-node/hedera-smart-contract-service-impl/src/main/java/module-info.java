@@ -7,7 +7,7 @@ module com.hedera.node.app.service.contract.impl {
     requires transitive com.hedera.node.app.service.token;
     requires transitive com.hedera.node.app.spi;
     requires transitive com.hedera.node.config;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.hedera.pbj.runtime;
     requires transitive com.swirlds.config.api;
     requires transitive dagger;

@@ -13,5 +13,5 @@ module com.hedera.node.blocknode.core {
     requires transitive com.hedera.node.blocknode.filesystem.api;
     requires transitive com.hedera.node.blocknode.grpc.api;
     requires transitive com.hedera.node.blocknode.state;
-    requires transitive com.hedera.node.hapi;
+    requires com.swirlds.platform.hapi;
 }

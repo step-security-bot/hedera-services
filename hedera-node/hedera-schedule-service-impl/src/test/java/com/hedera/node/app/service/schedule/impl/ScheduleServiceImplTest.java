@@ -17,12 +17,13 @@
 package com.hedera.node.app.service.schedule.impl;
 
 import com.hedera.node.app.service.schedule.ScheduleService;
-import com.hedera.node.app.spi.fixtures.state.TestSchema;
-import com.hedera.node.app.spi.state.Schema;
-import com.hedera.node.app.spi.state.SchemaRegistry;
-import com.hedera.node.app.spi.state.StateDefinition;
+import com.swirlds.platform.state.spi.Schema;
+import com.swirlds.platform.state.spi.SchemaRegistry;
 import java.util.List;
 import java.util.Set;
+
+import com.swirlds.platform.state.spi.StateDefinition;
+import com.swirlds.platform.test.fixtures.state.TestSchema;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

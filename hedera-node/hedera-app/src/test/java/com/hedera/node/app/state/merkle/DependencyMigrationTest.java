@@ -16,7 +16,6 @@
 
 package com.hedera.node.app.state.merkle;
 
-import static com.hedera.node.app.spi.fixtures.state.TestSchema.CURRENT_VERSION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -25,14 +24,16 @@ import com.hedera.hapi.node.state.common.EntityNumber;
 import com.hedera.node.app.OrderedServiceMigrator;
 import com.hedera.node.app.ids.EntityIdService;
 import com.hedera.node.app.services.ServicesRegistryImpl;
-import com.hedera.node.app.spi.Service;
 import com.hedera.node.app.spi.fixtures.state.NoOpGenesisRecordsBuilder;
-import com.hedera.node.app.spi.info.NetworkInfo;
-import com.hedera.node.app.spi.state.MigrationContext;
-import com.hedera.node.app.spi.state.Schema;
-import com.hedera.node.app.spi.state.SchemaRegistry;
-import com.hedera.node.app.spi.state.StateDefinition;
-import com.hedera.node.app.spi.state.WritableStates;
+import com.swirlds.platform.state.merkle.HederaLifecycles;
+import com.swirlds.platform.state.merkle.MerkleHederaState;
+import com.swirlds.platform.state.spi.Schema;
+import com.swirlds.platform.state.spi.SchemaRegistry;
+import com.swirlds.platform.state.spi.Service;
+import com.swirlds.platform.state.spi.StateDefinition;
+import com.swirlds.platform.state.spi.WritableStates;
+import com.swirlds.platform.state.spi.info.NetworkInfo;
+import com.swirlds.platform.state.spi.MigrationContext;
 import com.hedera.node.app.throttle.ThrottleAccumulator;
 import com.hedera.node.app.version.HederaSoftwareVersion;
 import com.hedera.node.config.VersionedConfigImpl;
@@ -53,9 +54,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DependencyMigrationTest extends MerkleTestBase {
+class DependencyMigrationTest extends com.swirlds.platform.test.fixtures.state.merkle.MerkleTestBase {
 
-    private static final HederaSoftwareVersion VERSION = new HederaSoftwareVersion(CURRENT_VERSION, CURRENT_VERSION);
+    private static final HederaSoftwareVersion VERSION = new HederaSoftwareVersion(com.swirlds.platform.test.fixtures.state.TestSchema.CURRENT_VERSION, CURRENT_VERSION);
     private static final VersionedConfigImpl VERSIONED_CONFIG =
             new VersionedConfigImpl(HederaTestConfigBuilder.createConfig(), 1);
     private static final long INITIAL_ENTITY_ID = 5;

@@ -18,8 +18,8 @@ package com.hedera.node.app.services;
 
 import static java.util.Objects.requireNonNull;
 
-import com.hedera.node.app.spi.Service;
-import com.hedera.node.app.spi.state.SchemaRegistry;
+import com.swirlds.platform.state.spi.Service;
+import com.swirlds.platform.state.spi.SchemaRegistry;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Set;
 import javax.inject.Singleton;

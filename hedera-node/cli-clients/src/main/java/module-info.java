@@ -13,7 +13,7 @@ module com.hedera.node.services.cli {
     requires com.hedera.node.app.service.evm;
     requires com.hedera.node.app.spi;
     requires com.hedera.node.app;
-    requires com.hedera.node.hapi;
+    requires com.swirlds.platform.hapi;
     requires com.google.common;
     requires com.google.protobuf;
     requires com.hedera.pbj.runtime;

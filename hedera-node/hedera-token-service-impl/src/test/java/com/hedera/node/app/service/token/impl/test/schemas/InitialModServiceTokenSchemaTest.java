@@ -35,7 +35,7 @@ import static com.hedera.node.app.service.token.impl.test.schemas.SyntheticAccou
 import static com.hedera.node.app.service.token.impl.test.schemas.SyntheticAccountsData.TREASURY_ACCOUNT_NUM;
 import static com.hedera.node.app.service.token.impl.test.schemas.SyntheticAccountsData.buildConfig;
 import static com.hedera.node.app.service.token.impl.test.schemas.SyntheticAccountsData.configBuilder;
-import static com.hedera.node.app.spi.fixtures.state.TestSchema.CURRENT_VERSION;
+import static com.swirlds.platform.test.fixtures.state.TestSchema.CURRENT_VERSION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
@@ -48,15 +48,14 @@ import com.hedera.node.app.ids.WritableEntityIdStore;
 import com.hedera.node.app.service.token.impl.TokenServiceImpl;
 import com.hedera.node.app.service.token.impl.schemas.InitialModServiceTokenSchema;
 import com.hedera.node.app.spi.fixtures.info.FakeNetworkInfo;
-import com.hedera.node.app.spi.fixtures.state.MapWritableKVState;
-import com.hedera.node.app.spi.fixtures.state.MapWritableStates;
-import com.hedera.node.app.spi.info.NetworkInfo;
-import com.hedera.node.app.spi.info.NodeInfo;
-import com.hedera.node.app.spi.state.EmptyReadableStates;
-import com.hedera.node.app.spi.state.WritableSingletonState;
-import com.hedera.node.app.spi.state.WritableSingletonStateBase;
-import com.hedera.node.app.spi.state.WritableStates;
-import com.hedera.node.app.spi.workflows.record.GenesisRecordsBuilder;
+import com.swirlds.platform.state.spi.EmptyReadableStates;
+import com.swirlds.platform.state.spi.WritableSingletonState;
+import com.swirlds.platform.state.spi.WritableSingletonStateBase;
+import com.swirlds.platform.state.spi.WritableStates;
+import com.swirlds.platform.state.spi.info.NetworkInfo;
+import com.swirlds.platform.state.spi.info.NodeInfo;
+import com.swirlds.platform.state.spi.workflows.record.GenesisRecordsBuilder;
+import com.swirlds.platform.test.fixtures.state.MapWritableKVState;
 import com.hedera.node.app.workflows.handle.record.MigrationContextImpl;
 import com.hedera.pbj.runtime.io.buffer.Bytes;
 import com.swirlds.config.api.Configuration;
@@ -67,6 +66,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
+
+import com.swirlds.platform.test.fixtures.state.MapWritableStates;
 import org.assertj.core.api.Assertions;
 import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,7 +103,7 @@ final class InitialModServiceTokenSchemaTest {
     @Captor
     private ArgumentCaptor<SortedSet<Account>> blocklistMapCaptor;
 
-    private MapWritableKVState<AccountID, Account> accounts;
+    private com.swirlds.platform.test.fixtures.state.MapWritableKVState<AccountID, Account> accounts;
     private WritableStates newStates;
     private Configuration config;
     private NetworkInfo networkInfo;

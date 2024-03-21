@@ -18,7 +18,7 @@ package com.hedera.node.app.service.networkadmin.impl.test;
 
 import com.hedera.node.app.service.networkadmin.NetworkService;
 import com.hedera.node.app.service.networkadmin.impl.NetworkServiceImpl;
-import com.hedera.node.app.spi.state.SchemaRegistry;
+import com.swirlds.platform.state.spi.SchemaRegistry;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

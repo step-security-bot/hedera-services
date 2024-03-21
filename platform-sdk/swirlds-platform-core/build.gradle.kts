@@ -44,8 +44,11 @@ testModuleInfo {
     requires("com.swirlds.platform.core")
     requires("com.swirlds.config.extensions.test.fixtures")
     requires("org.assertj.core")
+    requires("io.github.classgraph")
+    requires("org.junit.jupiter")
     requires("org.junit.jupiter.api")
     requires("org.junit.jupiter.params")
     requires("org.mockito")
     requiresStatic("com.github.spotbugs.annotations")
 }
+

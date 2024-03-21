@@ -17,9 +17,9 @@
 package com.hedera.node.app.service.networkadmin.impl.schemas;
 
 import com.hedera.hapi.node.base.SemanticVersion;
-import com.hedera.node.app.spi.state.MigrationContext;
-import com.hedera.node.app.spi.state.Schema;
-import com.hedera.node.app.spi.state.StateDefinition;
+import com.swirlds.platform.state.spi.MigrationContext;
+import com.swirlds.platform.state.spi.Schema;
+import com.swirlds.platform.state.spi.StateDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;

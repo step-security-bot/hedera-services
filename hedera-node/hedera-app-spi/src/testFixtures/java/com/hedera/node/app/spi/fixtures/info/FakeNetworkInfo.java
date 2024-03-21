@@ -20,9 +20,9 @@ import static com.hedera.node.app.spi.fixtures.state.TestSchema.CURRENT_VERSION;
 
 import com.hedera.hapi.node.base.AccountID;
 import com.hedera.hapi.node.base.SemanticVersion;
-import com.hedera.node.app.spi.info.NetworkInfo;
-import com.hedera.node.app.spi.info.NodeInfo;
-import com.hedera.node.app.spi.info.SelfNodeInfo;
+import com.swirlds.platform.state.spi.info.NetworkInfo;
+import com.swirlds.platform.state.spi.info.NodeInfo;
+import com.swirlds.platform.state.spi.info.SelfNodeInfo;
 import com.hedera.pbj.runtime.io.buffer.Bytes;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;

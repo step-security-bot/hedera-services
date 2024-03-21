@@ -66,8 +66,6 @@ include(":app-spi", "hedera-node/hedera-app-spi")
 
 include(":config", "hedera-node/hedera-config")
 
-include(":hapi", "hedera-node/hapi")
-
 include(":services-cli", "hedera-node/cli-clients")
 
 include(":test-clients", "hedera-node/test-clients")
@@ -102,6 +100,8 @@ include(":swirlds-merkle", "platform-sdk/swirlds-merkle")
 include(":swirlds-merkledb", "platform-sdk/swirlds-jasperdb")
 
 include(":swirlds-virtualmap", "platform-sdk/swirlds-virtualmap")
+
+include(":swirlds-platform-hapi", "platform-sdk/swirlds-platform-hapi")
 
 include(":swirlds-platform-core", "platform-sdk/swirlds-platform-core")
 

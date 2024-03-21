@@ -28,9 +28,12 @@ import static org.mockito.Mockito.when;
 
 import com.hedera.hapi.node.state.blockrecords.BlockInfo;
 import com.hedera.hapi.node.state.blockrecords.RunningHashes;
-import com.hedera.node.app.spi.state.*;
 import com.hedera.pbj.runtime.io.buffer.Bytes;
 import java.util.Set;
+
+import com.swirlds.platform.state.spi.MigrationContext;
+import com.swirlds.platform.state.spi.Schema;
+import com.swirlds.platform.state.spi.SchemaRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

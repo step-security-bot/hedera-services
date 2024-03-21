@@ -134,6 +134,15 @@ module com.swirlds.platform.core {
     exports com.swirlds.platform.wiring.components;
     exports com.swirlds.platform.event.hashing;
     exports com.swirlds.platform.event.orphan;
+    exports com.swirlds.platform.state.merkle;
+    exports com.swirlds.platform.state.merkle.logging;
+    exports com.swirlds.platform.state.merkle.disk;
+    exports com.swirlds.platform.state.merkle.singleton;
+    exports com.swirlds.platform.state.merkle.memory;
+    exports com.swirlds.platform.state.merkle.queue;
+    exports com.swirlds.platform.state.spi;
+    exports com.swirlds.platform.state.spi.info;
+    exports com.swirlds.platform.state.spi.workflows.record;
 
     requires transitive com.swirlds.base;
     requires transitive com.swirlds.cli;
@@ -158,4 +167,7 @@ module com.swirlds.platform.core {
     requires org.bouncycastle.pkix;
     requires org.bouncycastle.provider;
     requires static com.github.spotbugs.annotations;
+    requires com.swirlds.fcqueue;
+    requires com.swirlds.merkle;
+    requires com.swirlds.platform.hapi;
 }

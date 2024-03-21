@@ -16,7 +16,7 @@
 
 package com.hedera.node.app.service.token.impl.comparator;
 
-import static com.hedera.node.app.spi.HapiUtils.ACCOUNT_ID_COMPARATOR;
+import static com.swirlds.platform.state.spi.HapiUtils.ACCOUNT_ID_COMPARATOR;
 
 import com.hedera.hapi.node.base.AccountAmount;
 import com.hedera.hapi.node.base.TokenID;

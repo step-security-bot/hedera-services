@@ -1,6 +1,6 @@
 module com.hedera.node.test.clients.yahcli {
     requires com.hedera.node.app.hapi.utils;
-    requires com.hedera.node.hapi;
+    requires com.swirlds.platform.hapi;
     requires com.hedera.node.test.clients;
     requires com.github.spotbugs.annotations;
     requires com.google.common;

@@ -19,10 +19,10 @@ package com.hedera.node.app.spi.fixtures;
 import static java.util.Objects.requireNonNull;
 
 import com.hedera.hapi.node.base.SemanticVersion;
-import com.hedera.node.app.spi.Service;
-import com.hedera.node.app.spi.fixtures.state.TestSchema;
-import com.hedera.node.app.spi.state.Schema;
-import com.hedera.node.app.spi.state.SchemaRegistry;
+import com.swirlds.platform.state.spi.Schema;
+import com.swirlds.platform.state.spi.SchemaRegistry;
+import com.swirlds.platform.state.spi.Service;
+import com.swirlds.platform.test.fixtures.state.TestSchema;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.List;

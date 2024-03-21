@@ -6,7 +6,7 @@ module com.hedera.node.config.test.fixtures {
     requires com.hedera.node.app.hapi.utils;
     requires com.hedera.node.app.service.mono;
     requires com.hedera.node.config;
-    requires com.hedera.node.hapi;
+    requires com.swirlds.platform.hapi;
     requires com.swirlds.common;
     requires com.swirlds.merkledb;
     requires com.swirlds.platform.core;

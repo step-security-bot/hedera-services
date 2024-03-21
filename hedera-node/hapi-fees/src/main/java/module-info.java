@@ -15,7 +15,7 @@ module com.hedera.node.app.hapi.fees {
     exports com.hedera.node.app.hapi.fees.usage.token.entities;
 
     requires transitive com.hedera.node.app.hapi.utils;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.google.common;
     requires transitive com.google.protobuf;
     requires transitive dagger;

@@ -6,11 +6,17 @@ open module com.swirlds.platform.core.test.fixtures {
     requires org.apache.logging.log4j;
     requires org.junit.jupiter.api;
     requires static com.github.spotbugs.annotations;
+    requires com.hedera.pbj.runtime;
+    requires com.swirlds.platform.hapi;
+    requires com.swirlds.merkle;
+    requires com.swirlds.merkledb;
 
+    exports com.swirlds.platform.test.fixtures;
     exports com.swirlds.platform.test.fixtures.stream;
     exports com.swirlds.platform.test.fixtures.event;
     exports com.swirlds.platform.test.fixtures.event.source;
     exports com.swirlds.platform.test.fixtures.event.generator;
     exports com.swirlds.platform.test.fixtures.state;
     exports com.swirlds.platform.test.fixtures.addressbook;
+    exports com.swirlds.platform.test.fixtures.state.merkle;
 }

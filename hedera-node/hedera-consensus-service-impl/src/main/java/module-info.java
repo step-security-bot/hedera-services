@@ -4,7 +4,7 @@ module com.hedera.node.app.service.consensus.impl {
     requires transitive com.hedera.node.app.service.consensus;
     requires transitive com.hedera.node.app.service.mono;
     requires transitive com.hedera.node.app.spi;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.hedera.pbj.runtime;
     requires transitive com.swirlds.merkle;
     requires transitive dagger;

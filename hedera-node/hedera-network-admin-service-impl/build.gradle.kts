@@ -25,6 +25,7 @@ testModuleInfo {
     requires("com.hedera.node.app.service.network.admin.impl")
     requires("com.hedera.node.app.service.token.impl")
     requires("com.hedera.node.app.spi.test.fixtures")
+    requires("com.swirlds.platform.core.test.fixtures")
     requires("com.hedera.node.app.test.fixtures")
     requires("com.hedera.node.config.test.fixtures")
     requires("com.swirlds.fcqueue")
@@ -34,3 +35,4 @@ testModuleInfo {
     requires("org.mockito.junit.jupiter")
     requiresStatic("com.github.spotbugs.annotations")
 }
+

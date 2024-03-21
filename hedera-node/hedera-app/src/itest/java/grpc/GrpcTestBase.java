@@ -22,10 +22,9 @@ import com.hedera.hapi.node.transaction.Response;
 import com.hedera.hapi.node.transaction.TransactionResponse;
 import com.hedera.node.app.grpc.impl.netty.NettyGrpcServerManager;
 import com.hedera.node.app.services.ServicesRegistry;
-import com.hedera.node.app.spi.Service;
-import com.hedera.node.app.spi.fixtures.TestBase;
-import com.hedera.node.app.spi.fixtures.state.NoOpGenesisRecordsBuilder;
 import com.hedera.node.app.state.merkle.MerkleSchemaRegistry;
+import com.swirlds.platform.state.spi.Service;
+import com.hedera.node.app.spi.fixtures.state.NoOpGenesisRecordsBuilder;
 import com.hedera.node.app.workflows.ingest.IngestWorkflow;
 import com.hedera.node.app.workflows.query.QueryWorkflow;
 import com.hedera.node.config.VersionedConfigImpl;
@@ -66,6 +65,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.assertj.core.api.Assumptions;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
+
+import com.swirlds.platform.test.fixtures.state.TestBase;
 
 /**
  * Base class for testing the gRPC handling engine. This implementation is not suitable for general integration testing,

@@ -16,9 +16,9 @@
 
 package com.hedera.node.app.service.file;
 
-import com.hedera.node.app.spi.Service;
 import com.hedera.node.app.spi.ServiceFactory;
 import com.hedera.pbj.runtime.RpcServiceDefinition;
+import com.swirlds.platform.state.spi.Service;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.ServiceLoader;
 import java.util.Set;

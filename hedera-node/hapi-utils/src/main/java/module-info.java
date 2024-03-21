@@ -16,7 +16,7 @@ module com.hedera.node.app.hapi.utils {
     exports com.hedera.node.app.hapi.utils.exception;
     exports com.hedera.node.app.hapi.utils.sysfiles.validation;
 
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.google.protobuf;
     requires transitive com.swirlds.common;
     requires transitive dagger;

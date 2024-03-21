@@ -12,7 +12,7 @@ module com.hedera.node.app {
     requires transitive com.hedera.node.app.service.util.impl;
     requires transitive com.hedera.node.app.spi;
     requires transitive com.hedera.node.config;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.hedera.pbj.runtime;
     requires transitive com.swirlds.common;
     requires transitive com.swirlds.config.api;
@@ -58,14 +58,6 @@ module com.hedera.node.app {
     exports com.hedera.node.app.state.merkle to
             com.hedera.node.services.cli,
             com.swirlds.common;
-    exports com.hedera.node.app.state.merkle.disk to
-            com.swirlds.common,
-            com.hedera.node.services.cli;
-    exports com.hedera.node.app.state.merkle.memory to
-            com.hedera.node.services.cli,
-            com.swirlds.common;
-    exports com.hedera.node.app.state.merkle.singleton to
-            com.swirlds.common;
     exports com.hedera.node.app.authorization to
             com.swirlds.platform.core;
     exports com.hedera.node.app.state.merkle.adapters to
@@ -93,9 +85,6 @@ module com.hedera.node.app {
             com.hedera.node.app.test.fixtures;
     exports com.hedera.node.app.workflows.handle.record to
             com.hedera.node.app.test.fixtures;
-    exports com.hedera.node.app.state.merkle.queue to
-            com.swirlds.common,
-            com.swirlds.platform;
     exports com.hedera.node.app.version to
             com.hedera.node.app.test.fixtures,
             com.swirlds.common,

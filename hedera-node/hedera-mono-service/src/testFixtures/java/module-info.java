@@ -9,7 +9,7 @@ module com.hedera.node.app.service.mono.test.fixtures {
     requires transitive com.hedera.node.app.service.mono;
     requires transitive com.hedera.node.app.service.token;
     requires transitive com.hedera.node.app.spi;
-    requires transitive com.hedera.node.hapi;
+    requires transitive com.swirlds.platform.hapi;
     requires transitive com.google.protobuf;
     requires transitive com.hedera.pbj.runtime;
     requires transitive com.swirlds.common;

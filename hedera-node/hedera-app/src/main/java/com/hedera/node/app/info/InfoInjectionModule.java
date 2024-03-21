@@ -18,8 +18,8 @@ package com.hedera.node.app.info;
 
 import com.hedera.hapi.node.base.AccountID;
 import com.hedera.node.app.annotations.NodeSelfId;
-import com.hedera.node.app.spi.info.NetworkInfo;
-import com.hedera.node.app.spi.info.SelfNodeInfo;
+import com.swirlds.platform.state.spi.info.NetworkInfo;
+import com.swirlds.platform.state.spi.info.SelfNodeInfo;
 import com.hedera.node.app.spi.numbers.HederaAccountNumbers;
 import dagger.Binds;
 import dagger.Module;
