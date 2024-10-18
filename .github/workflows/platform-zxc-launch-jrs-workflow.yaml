@@ -47,6 +47,9 @@ defaults:
   run:
     shell: bash
 
+permissions:
+  contents: read
+
 jobs:
   launch-workflow:
     name: Launch Workflow
